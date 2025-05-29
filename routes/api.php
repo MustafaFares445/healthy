@@ -30,8 +30,10 @@ Route::middleware(AdminOnly::class)->group(function(){
     Route::apiResource('users"', \App\Http\Controllers\UserController::class);
     Route::apiResource('user-health-infos"', \App\Http\Controllers\UserHealthInfoController::class);
 
-    Route::post('/login' , [AuthController::class , 'login']);
-    Route::post('/register' , [AuthController::class , 'register']);
-    Route::post('/logout' , [AuthController::class , 'logout']);
+
 });
 
+
+Route::post('/login' , [AuthController::class , 'login']);
+Route::post('/register' , [AuthController::class , 'register']);
+Route::post('/logout' , [AuthController::class , 'logout']);
