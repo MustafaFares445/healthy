@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Meal extends Model
+{
+    protected $fillable = [
+        'owner_id', 'title', 'description', 'price_cents', 'is_available',
+        'available_from', 'available_to', 'diet_type'
+    ];
+
+    protected $casts = [
+        'is_available' => 'boolean',
+        'available_from' => 'datetime:H:i:s',
+        'available_to' => 'datetime:H:i:s',
+    ];
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function allergens()
+    {
+        return $this->belongsToMany(Allergen::class, 'meal_allergens');
+    }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredient::class, 'meal_ingredients')
+                    ->withPivot('quantity', 'unit');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_items')
+                    ->withPivot('quantity', 'unit_price_cents');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+}

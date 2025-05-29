@@ -1,0 +1,2545 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Healthy App",
+        "description": "API documentation for Healthy",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/allergens": {
+            "get": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Get a list of allergens",
+                "operationId": "15052ad9a89e256db3b6b1bcc4a0a498",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by allergen name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AllergenResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Create a new allergen",
+                "operationId": "b2ac7c2756272cf1602375ec884c02fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreAllergenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Allergen created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AllergenResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/allergens/{id}": {
+            "get": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Get a specific allergen",
+                "operationId": "6854780ae52ec4062731d8043dd6ef49",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the allergen",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AllergenResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Update an existing allergen",
+                "operationId": "d21230dd7642144b91eb5f2d166deae0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the allergen",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateAllergenRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Allergen updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AllergenResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Delete an allergen",
+                "operationId": "c970be5f5305808866511870f9bd55da",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the allergen",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Allergen deleted successfully"
+                    },
+                    "422": {
+                        "description": "Cannot delete allergen as it is associated with one or more meals"
+                    }
+                }
+            }
+        },
+        "/api/allergens/stats": {
+            "get": {
+                "tags": [
+                    "Allergens"
+                ],
+                "summary": "Get allergen usage statistics",
+                "operationId": "08487a3a8da0383d6fbd3e377599d96e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "total_allergens": {
+                                                    "type": "integer"
+                                                },
+                                                "most_common_allergen": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "meals_count": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "description": "Register a new user.",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "passwordCnfirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    },
+                                    "passwordCnfirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User registered successfully"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log in a user",
+                "description": "Log in a user and return a token.",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User logged in successfully"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abcdef123456"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Log out the user",
+                "description": "Log out the user and revoke the token.",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/ingredients": {
+            "get": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Get a list of ingredients",
+                "operationId": "88554df920fe97e07f179ca559f98b75",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by ingredient name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "minProtein",
+                        "in": "query",
+                        "description": "Filter by minimum protein",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "maxSugar",
+                        "in": "query",
+                        "description": "Filter by maximum sugar",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngredientResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Create a new ingredient",
+                "operationId": "290f4795ec7faed0d1e88d61aeb935ee",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreIngredientRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ingredient created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngredientResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ingredients/{id}": {
+            "get": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Get a specific ingredient",
+                "operationId": "0a054220b0a2b30633ee13a9d92f6a97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the ingredient",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngredientResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Update an existing ingredient",
+                "operationId": "b2b705f67b293905971309a7927b3636",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the ingredient",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateIngredientRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ingredient updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/IngredientResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Delete an ingredient",
+                "operationId": "d7a227e0854bd498dfe1c1b9155b4bd0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the ingredient",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ingredient deleted successfully"
+                    },
+                    "422": {
+                        "description": "Cannot delete ingredient as it is used in one or more meals"
+                    }
+                }
+            }
+        },
+        "/api/ingredients/stats": {
+            "get": {
+                "tags": [
+                    "Ingredients"
+                ],
+                "summary": "Get ingredient statistics",
+                "operationId": "d5fe9721e0d91ac99cb0ef0278ed479b",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "totalIngredients": {
+                                            "type": "integer"
+                                        },
+                                        "highestCalorie": {
+                                            "type": "object"
+                                        },
+                                        "averageProtein": {
+                                            "type": "number"
+                                        },
+                                        "lowestSugar": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/meals": {
+            "get": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Get a list of meals",
+                "operationId": "4d2d017ae2b8ac8cecf16eb53c6d5fd9",
+                "parameters": [
+                    {
+                        "name": "available",
+                        "in": "query",
+                        "description": "Filter by availability",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "dietType",
+                        "in": "query",
+                        "description": "Filter by diet type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ownerId",
+                        "in": "query",
+                        "description": "Filter by owner ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by title",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MealResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Create a new meal",
+                "operationId": "06b46f308f52e05ab22bd7c12ce2d15a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreMealRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Meal created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/meals/{id}": {
+            "get": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Get a specific meal",
+                "operationId": "7ddd9781693c95914584c78006bb752a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the meal",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Update a specific meal",
+                "operationId": "6fe35e91135dd0abcc8d3f701be49aa6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the meal",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMealRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Meal updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MealResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Delete a specific meal",
+                "operationId": "ad04fdbda4295360fbd349f436e8a974",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the meal",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Meal deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meal deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/meals/diet-types": {
+            "get": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Get list of diet types",
+                "operationId": "bff73a28275fa4dcadb21922887aaf79",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get a list of orders",
+                "operationId": "2cd7e03021e72d9d799c12dfe179c865",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "Filter by user ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "description": "Filter by start date",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "description": "Filter by end date",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OrderResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a new order",
+                "operationId": "d690d6834318e9b064df441e854de8b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreOrderRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get a specific order",
+                "operationId": "c29621029e70f65247909d3e09031118",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update an existing order",
+                "operationId": "6a7029f5510ca08e28a2d58a5fe19439",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateOrderRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Delete an order",
+                "operationId": "303a7b797887b66c7790c4c187b54790",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order deleted successfully"
+                    },
+                    "422": {
+                        "description": "Only pending orders can be deleted"
+                    }
+                }
+            }
+        },
+        "/api/orders/status-options": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order status options",
+                "operationId": "fd6b0d74b6ce84b1af55b9b508881e24",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all reviews",
+                "operationId": "346169ce6ab0c633530a7cedc1a25fab",
+                "responses": {
+                    "200": {
+                        "description": "List of reviews",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReviewResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a new review",
+                "operationId": "154c71f5f72b459d998f5ea451bd4c96",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Review created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reviews/{id}": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get a specific review",
+                "operationId": "a9949d3a965ed93ae30547c07eef7505",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Review details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Update a review",
+                "operationId": "17776becb9faf054b5c49bc83ad6c974",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateReviewRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReviewResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Delete a review",
+                "operationId": "89986343b5dbd2b909c2764aeb7e4096",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the review to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Review deleted successfully"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "summary": "Get all users",
+                "operationId": "c457726701591d1183b53aa71fc13441",
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new user",
+                "operationId": "592819a0265360b2014512d6dbfaf0e7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "summary": "Get a specific user",
+                "operationId": "36a33ff774d5cba33c039dec2c3e0287",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update a user",
+                "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a user",
+                "operationId": "fa56cffde745d3f152f95cbacd936c0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted"
+                    }
+                }
+            }
+        },
+        "/api/user-health-infos": {
+            "get": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Get all user health infos",
+                "operationId": "0517a9cea081680431efb90d32cbfacf",
+                "responses": {
+                    "200": {
+                        "description": "List of user health infos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserHealthInfoResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Create a new user health info",
+                "operationId": "f92b857961826d01cf8be4e66fed0847",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserHealthInfoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User health info created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserHealthInfoResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user-health-infos/{id}": {
+            "get": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Get a specific user health info",
+                "operationId": "ff1f6268dae47d62892ae1b75fcd6267",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user health info",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User health info details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserHealthInfoResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Update a user health info",
+                "operationId": "2b75ffb305f38da7fd187158d2ccdcf2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user health info",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserHealthInfoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User health info updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserHealthInfoResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Delete a user health info",
+                "operationId": "54ad596d541d6127de681407b74496d5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the user health info",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User health info deleted"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StoreAllergenRequest": {
+                "title": "StoreAllergenRequest",
+                "description": "Request schema for storing a new allergen",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the allergen",
+                        "type": "string",
+                        "maxLength": 50,
+                        "example": "Peanuts"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreIngredientRequest": {
+                "title": "Store Ingredient Request",
+                "description": "Request body for storing a new ingredient",
+                "required": [
+                    "name",
+                    "calories",
+                    "protein",
+                    "carbohydrates",
+                    "sugar",
+                    "fat",
+                    "fiber",
+                    "sodium"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the ingredient",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "calories": {
+                        "description": "The calorie content of the ingredient",
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "protein": {
+                        "description": "The protein content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    },
+                    "carbohydrates": {
+                        "description": "The carbohydrate content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    },
+                    "sugar": {
+                        "description": "The sugar content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    },
+                    "fat": {
+                        "description": "The fat content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    },
+                    "fiber": {
+                        "description": "The fiber content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    },
+                    "sodium": {
+                        "description": "The sodium content of the ingredient",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0
+                    }
+                },
+                "type": "object"
+            },
+            "StoreMealRequest": {
+                "title": "Store Meal Request",
+                "description": "Request body for storing a new meal",
+                "required": [
+                    "ownerId",
+                    "title",
+                    "price"
+                ],
+                "properties": {
+                    "ownerId": {
+                        "description": "ID of the owner",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "description": "Title of the meal",
+                        "type": "string",
+                        "maxLength": 150,
+                        "example": "Delicious Pasta"
+                    },
+                    "description": {
+                        "description": "Description of the meal",
+                        "type": "string",
+                        "example": "A classic Italian pasta dish"
+                    },
+                    "price": {
+                        "description": "Price of the meal",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "example": 12.99
+                    },
+                    "isAvailable": {
+                        "description": "Indicates if the meal is available",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "availableFrom": {
+                        "description": "Time from which the meal is available",
+                        "type": "string",
+                        "format": "time",
+                        "example": "12:00:00"
+                    },
+                    "availableTo": {
+                        "description": "Time until which the meal is available",
+                        "type": "string",
+                        "format": "time",
+                        "example": "18:00:00"
+                    },
+                    "dietType": {
+                        "description": "Type of diet the meal is suitable for",
+                        "type": "string",
+                        "enum": [
+                            "keto",
+                            "low_carb",
+                            "vegetarian",
+                            "vegan",
+                            "paleo",
+                            "balanced"
+                        ],
+                        "example": "vegetarian"
+                    },
+                    "allergenIds": {
+                        "description": "List of allergen IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    },
+                    "ingredients": {
+                        "description": "List of ingredients with their quantities and units",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "quantity": {
+                                    "type": "number",
+                                    "format": "float",
+                                    "example": 100
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "enum": [
+                                        "tbsp",
+                                        "g",
+                                        "piece",
+                                        "l",
+                                        "ml"
+                                    ],
+                                    "example": "g"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "example": [
+                            {
+                                "id": 1,
+                                "quantity": 100,
+                                "unit": "g"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "StoreOrderRequest": {
+                "required": [
+                    "userId",
+                    "deliveryAddress",
+                    "deliveryTimeSlot",
+                    "items"
+                ],
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user placing the order",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "deliveryAddress": {
+                        "description": "The delivery address for the order",
+                        "type": "string",
+                        "example": "123 Main St, Springfield, IL"
+                    },
+                    "deliveryTimeSlot": {
+                        "description": "The selected delivery time slot",
+                        "type": "string",
+                        "example": "10:00 AM - 12:00 PM"
+                    },
+                    "items": {
+                        "description": "List of items in the order",
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "mealId",
+                                "quantity"
+                            ],
+                            "properties": {
+                                "meal_id": {
+                                    "description": "The ID of the meal",
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "quantity": {
+                                    "description": "The quantity of the meal",
+                                    "type": "integer",
+                                    "example": 2
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "StoreReviewRequest": {
+                "required": [
+                    "userId",
+                    "mealId",
+                    "rating"
+                ],
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user submitting the review",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "mealId": {
+                        "description": "The ID of the meal being reviewed",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "rating": {
+                        "description": "The rating given to the meal (1-5)",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "comment": {
+                        "description": "An optional comment about the meal",
+                        "type": "string",
+                        "example": "This meal was delicious!"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserHealthInfoRequest": {
+                "required": [
+                    "userId"
+                ],
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "height": {
+                        "description": "The height of the user in centimeters",
+                        "type": "number",
+                        "format": "float",
+                        "example": 175.5
+                    },
+                    "weight": {
+                        "description": "The weight of the user in kilograms",
+                        "type": "number",
+                        "format": "float",
+                        "example": 70.5
+                    },
+                    "bloodPressure": {
+                        "description": "The blood pressure of the user",
+                        "type": "string",
+                        "example": "120/80"
+                    },
+                    "heartRate": {
+                        "description": "The heart rate of the user in beats per minute",
+                        "type": "integer",
+                        "example": 72
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserRequest": {
+                "title": "Store User Request",
+                "description": "Request body data for creating a new user",
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The name of the user",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "description": "The email address of the user",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "description": "The password of the user",
+                        "type": "string",
+                        "minLength": 8
+                    },
+                    "city": {
+                        "description": "The city of the user",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "phone": {
+                        "description": "The phone number of the user",
+                        "type": "string",
+                        "maxLength": 20
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateAllergenRequest": {
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user placing the order",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "deliveryAddress": {
+                        "description": "The delivery address for the order",
+                        "type": "string",
+                        "example": "123 Main St, Springfield, IL"
+                    },
+                    "deliveryTimeSlot": {
+                        "description": "The selected delivery time slot",
+                        "type": "string",
+                        "example": "10:00 AM - 12:00 PM"
+                    },
+                    "items": {
+                        "description": "List of items in the order",
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "mealId",
+                                "quantity"
+                            ],
+                            "properties": {
+                                "meal_id": {
+                                    "description": "The ID of the meal",
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "quantity": {
+                                    "description": "The quantity of the meal",
+                                    "type": "integer",
+                                    "example": 2
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateIngredientRequest": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the ingredient",
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "calories": {
+                        "description": "The calorie count of the ingredient",
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "protein": {
+                        "description": "The protein content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "carbohydrates": {
+                        "description": "The carbohydrate content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "sugar": {
+                        "description": "The sugar content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "fat": {
+                        "description": "The fat content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "fiber": {
+                        "description": "The fiber content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "sodium": {
+                        "description": "The sodium content of the ingredient",
+                        "type": "number",
+                        "minimum": 0
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateMealRequest": {
+                "properties": {
+                    "ownerId": {
+                        "description": "The ID of the owner",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "description": "The title of the meal",
+                        "type": "string",
+                        "maxLength": 150,
+                        "example": "Delicious Meal"
+                    },
+                    "description": {
+                        "description": "The description of the meal",
+                        "type": "string",
+                        "example": "A very tasty meal"
+                    },
+                    "price": {
+                        "description": "The price of the meal",
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "example": 9.99
+                    },
+                    "isAvailable": {
+                        "description": "Whether the meal is available",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "availableFrom": {
+                        "description": "The time from which the meal is available",
+                        "type": "string",
+                        "format": "time",
+                        "example": "08:00:00"
+                    },
+                    "availableTo": {
+                        "description": "The time until which the meal is available",
+                        "type": "string",
+                        "format": "time",
+                        "example": "18:00:00"
+                    },
+                    "dietType": {
+                        "description": "The type of diet",
+                        "type": "string",
+                        "enum": [
+                            "keto",
+                            "low_carb",
+                            "vegetarian",
+                            "vegan",
+                            "paleo",
+                            "balanced"
+                        ],
+                        "example": "vegetarian"
+                    },
+                    "allergenIds": {
+                        "description": "Array of allergen IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    },
+                    "ingredients": {
+                        "description": "Array of ingredients with their quantities and units",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "example": 1
+                                },
+                                "quantity": {
+                                    "type": "number",
+                                    "format": "float",
+                                    "example": 2.5
+                                },
+                                "unit": {
+                                    "type": "string",
+                                    "enum": [
+                                        "tbsp",
+                                        "g",
+                                        "piece",
+                                        "l"
+                                    ],
+                                    "example": "g"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "example": [
+                            {
+                                "id": 1,
+                                "quantity": 2.5,
+                                "unit": "g"
+                            }
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateOrderRequest": {
+                "properties": {
+                    "status": {
+                        "description": "The status of the order",
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "confirmed",
+                            "preparing",
+                            "delivered",
+                            "cancelled"
+                        ]
+                    },
+                    "deliveryAddress": {
+                        "description": "The delivery address for the order",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "deliveryTimeSlot": {
+                        "description": "The delivery time slot for the order",
+                        "type": "string",
+                        "maxLength": 50
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateReviewRequest": {
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user submitting the review",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "mealId": {
+                        "description": "The ID of the meal being reviewed",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "rating": {
+                        "description": "The rating given to the meal (1-5)",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "comment": {
+                        "description": "An optional comment about the meal",
+                        "type": "string",
+                        "example": "This meal was delicious!"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserHealthInfoRequest": {
+                "title": "Update User Health Info Request",
+                "description": "Request payload for updating user health information",
+                "required": [],
+                "properties": {
+                    "userId": {
+                        "description": "The ID of the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "height": {
+                        "description": "The height of the user in centimeters",
+                        "type": "number",
+                        "format": "float",
+                        "example": 175.5
+                    },
+                    "weight": {
+                        "description": "The weight of the user in kilograms",
+                        "type": "number",
+                        "format": "float",
+                        "example": 70.5
+                    },
+                    "bloodPressure": {
+                        "description": "The blood pressure of the user",
+                        "type": "string",
+                        "example": "120/80"
+                    },
+                    "heartRate": {
+                        "description": "The heart rate of the user in beats per minute",
+                        "type": "integer",
+                        "example": 72
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "title": "UpdateUserRequest",
+                "description": "Request schema for updating a user",
+                "properties": {
+                    "name": {
+                        "description": "The name of the user",
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "description": "The email of the user",
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "description": "The password of the user",
+                        "type": "string",
+                        "minLength": 8
+                    },
+                    "city": {
+                        "description": "The city of the user",
+                        "type": "string",
+                        "maxLength": 255,
+                        "nullable": true
+                    },
+                    "phone": {
+                        "description": "The phone number of the user",
+                        "type": "string",
+                        "maxLength": 20,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "AllergenResource": {
+                "title": "Allergen Resource",
+                "description": "Allergen resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the allergen",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the allergen",
+                        "type": "string"
+                    },
+                    "mealsCount": {
+                        "description": "The count of meals associated with the allergen",
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "description": "The date when the allergen was created",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "updatedAt": {
+                        "description": "The date when the allergen was last updated",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "IngredientResource": {
+                "title": "Ingredient Resource",
+                "description": "Ingredient resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the ingredient",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The name of the ingredient",
+                        "type": "string"
+                    },
+                    "nutritionalInfo": {
+                        "description": "Nutritional information of the ingredient",
+                        "properties": {
+                            "calories": {
+                                "description": "Calories per serving",
+                                "type": "number",
+                                "format": "float"
+                            },
+                            "macros": {
+                                "description": "Macronutrient information",
+                                "properties": {
+                                    "protein": {
+                                        "description": "Protein content in grams",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "carbohydrates": {
+                                        "description": "Carbohydrate content in grams",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "sugar": {
+                                        "description": "Sugar content in grams",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "fat": {
+                                        "description": "Fat content in grams",
+                                        "type": "number",
+                                        "format": "float"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "fiber": {
+                                "description": "Fiber content in grams",
+                                "type": "number",
+                                "format": "float"
+                            },
+                            "sodium": {
+                                "description": "Sodium content in milligrams",
+                                "type": "number",
+                                "format": "float"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "mealsCount": {
+                        "description": "Number of meals associated with this ingredient",
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "description": "The timestamp when the ingredient was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "description": "The timestamp when the ingredient was last updated",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "MealResource": {
+                "title": "Meal Resource",
+                "description": "Meal resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The ID of the meal",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "The title of the meal",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "The description of the meal",
+                        "type": "string"
+                    },
+                    "price": {
+                        "description": "The price of the meal in currency",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "isAvailable": {
+                        "description": "Indicates if the meal is available",
+                        "type": "boolean"
+                    },
+                    "availability": {
+                        "description": "The availability time frame of the meal",
+                        "properties": {
+                            "from": {
+                                "description": "The start time of availability",
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "to": {
+                                "description": "The end time of availability",
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "dietType": {
+                        "description": "The diet type of the meal",
+                        "type": "string"
+                    },
+                    "owner": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "allergens": {
+                        "description": "List of allergens associated with the meal",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllergenResource"
+                        }
+                    },
+                    "ingredients": {
+                        "description": "List of ingredients in the meal",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/IngredientResource"
+                        }
+                    },
+                    "createdAt": {
+                        "description": "The creation date of the meal",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "updatedAt": {
+                        "description": "The last update date of the meal",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "OrderResource": {
+                "title": "Order Resource",
+                "description": "Order resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The ID of the order",
+                        "type": "integer"
+                    },
+                    "user": {
+                        "description": "The user who placed the order",
+                        "properties": {
+                            "id": {
+                                "description": "The ID of the user",
+                                "type": "integer"
+                            },
+                            "name": {
+                                "description": "The name of the user",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "total": {
+                        "description": "The total amount of the order in currency",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "status": {
+                        "description": "The status of the order",
+                        "type": "string"
+                    },
+                    "deliveryAddress": {
+                        "description": "The delivery address of the order",
+                        "type": "string"
+                    },
+                    "deliveryTimeSlot": {
+                        "description": "The delivery time slot of the order",
+                        "type": "string"
+                    },
+                    "items": {
+                        "description": "The items in the order",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "mealId": {
+                                    "description": "The ID of the meal",
+                                    "type": "integer"
+                                },
+                                "mealTitle": {
+                                    "description": "The title of the meal",
+                                    "type": "string"
+                                },
+                                "quantity": {
+                                    "description": "The quantity of the meal",
+                                    "type": "integer"
+                                },
+                                "unit_price": {
+                                    "description": "The unit price of the meal in currency",
+                                    "type": "number",
+                                    "format": "float"
+                                },
+                                "subtotal": {
+                                    "description": "The subtotal of the meal in currency",
+                                    "type": "number",
+                                    "format": "float"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "placedAt": {
+                        "description": "The date and time when the order was placed",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "description": "The date when the order was last updated",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "ReviewResource": {
+                "title": "Review Resource",
+                "description": "Review resource representation",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the review",
+                        "type": "integer"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "meal": {
+                        "$ref": "#/components/schemas/MealResource"
+                    },
+                    "rating": {
+                        "description": "The rating given by the user",
+                        "type": "integer"
+                    },
+                    "comment": {
+                        "description": "The comment provided by the user",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserHealthInfoResource": {
+                "title": "User Health Info Resource",
+                "description": "User health information resource",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of the health info record",
+                        "type": "integer"
+                    },
+                    "userId": {
+                        "description": "The ID of the user associated with this health info",
+                        "type": "integer"
+                    },
+                    "height": {
+                        "description": "The height of the user",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "weight": {
+                        "description": "The weight of the user",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "bloodPressure": {
+                        "description": "The blood pressure of the user",
+                        "type": "string"
+                    },
+                    "heartRate": {
+                        "description": "The heart rate of the user",
+                        "type": "integer"
+                    },
+                    "createdAt": {
+                        "description": "The date when the health info was created",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "updatedAt": {
+                        "description": "The date when the health info was last updated",
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "title": "Allergen Resource",
+                "description": "Allergen resource representation",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Allergens",
+            "description": "Allergens"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Ingredients",
+            "description": "Ingredients"
+        },
+        {
+            "name": "Meals",
+            "description": "Meals"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Reviews",
+            "description": "Reviews"
+        },
+        {
+            "name": "User Health Info",
+            "description": "User Health Info"
+        }
+    ]
+}
