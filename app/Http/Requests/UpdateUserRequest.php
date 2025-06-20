@@ -40,6 +40,16 @@ use Illuminate\Foundation\Http\FormRequest;
  *         maxLength=20,
  *         nullable=true,
  *         description="The phone number of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="roles",
+ *         type="array",
+ *         @OA\Items(
+ *             type="string",
+ *             enum={"owner", "admin", "user"},
+ *             description="Role assigned to the user"
+ *         ),
+ *         description="Array of roles for the user"
  *     )
  * )
  */
@@ -68,6 +78,8 @@ class UpdateUserRequest extends FormRequest
             'password' => 'sometimes|string|min:8',
             'city' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
+            'roles' =>  ['sometimes', 'array'],
+            'roles.*' => ['required', 'in:owner,admin,user'],
         ];
     }
 }

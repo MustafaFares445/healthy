@@ -19,7 +19,6 @@ class AllergenController extends Controller
      *     path="/api/allergens",
      *     summary="Get a list of allergens",
      *     tags={"Allergens"},
-     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="search",
      *         in="query",

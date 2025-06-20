@@ -39,6 +39,16 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="string",
  *         maxLength=20,
  *         description="The phone number of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="roles",
+ *         type="array",
+ *         @OA\Items(
+ *             type="string",
+ *             enum={"owner", "admin", "user"},
+ *             description="Role assigned to the user"
+ *         ),
+ *         description="Roles assigned to the user. Must be one or more of: owner, admin, user"
  *     )
  * )
  */
@@ -64,9 +74,11 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string',
             'city' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
+            'roles' =>  ['required', 'array'],
+            'roles.*' => ['required', 'in:owner,admin,user'],
         ];
     }
 }

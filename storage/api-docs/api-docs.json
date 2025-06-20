@@ -48,12 +48,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             },
             "post": {
                 "tags": [
@@ -1362,16 +1357,57 @@
                 ],
                 "summary": "Get all users",
                 "operationId": "c457726701591d1183b53aa71fc13441",
+                "parameters": [
+                    {
+                        "name": "roles",
+                        "in": "query",
+                        "description": "Filter users by role name. Example: admin",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search users by name or email.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of users per page for pagination. Default is 15.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "List of users",
+                        "description": "Paginated list of users",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/UserResource"
-                                    }
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/UserResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -1516,6 +1552,9 @@
                 "responses": {
                     "204": {
                         "description": "User deleted"
+                    },
+                    "404": {
+                        "description": "User not found"
                     }
                 },
                 "security": [
@@ -1880,6 +1919,19 @@
                         "description": "The phone number of the user",
                         "type": "string",
                         "maxLength": 20
+                    },
+                    "roles": {
+                        "description": "Roles assigned to the user. Must be one or more of: owner, admin, user",
+                        "type": "array",
+                        "items": {
+                            "description": "Role assigned to the user",
+                            "type": "string",
+                            "enum": [
+                                "owner",
+                                "admin",
+                                "user"
+                            ]
+                        }
                     }
                 },
                 "type": "object"
@@ -2205,6 +2257,19 @@
                         "type": "string",
                         "maxLength": 20,
                         "nullable": true
+                    },
+                    "roles": {
+                        "description": "Array of roles for the user",
+                        "type": "array",
+                        "items": {
+                            "description": "Role assigned to the user",
+                            "type": "string",
+                            "enum": [
+                                "owner",
+                                "admin",
+                                "user"
+                            ]
+                        }
                     }
                 },
                 "type": "object"
