@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ingredient;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\IngredientResource;
 use App\Http\Requests\StoreIngredientRequest;
 use App\Http\Requests\UpdateIngredientRequest;
-use App\Http\Resources\IngredientResource;
-use App\Models\Ingredient;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
@@ -85,6 +85,7 @@ class IngredientController extends Controller
      *     path="/api/ingredients",
      *     summary="Create a new ingredient",
      *     tags={"Ingredients"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreIngredientRequest")
@@ -107,36 +108,11 @@ class IngredientController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/ingredients/{id}",
-     *     summary="Get a specific ingredient",
-     *     tags={"Ingredients"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID of the ingredient",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/IngredientResource")
-     *     )
-     * )
-     */
-    public function show(Ingredient $ingredient): IngredientResource
-    {
-        $ingredient->loadCount('meals');
-
-        return new IngredientResource($ingredient);
-    }
-
-    /**
      * @OA\Put(
      *     path="/api/ingredients/{id}",
      *     summary="Update an existing ingredient",
      *     tags={"Ingredients"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -170,6 +146,7 @@ class IngredientController extends Controller
      *     path="/api/ingredients/{id}",
      *     summary="Delete an ingredient",
      *     tags={"Ingredients"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -208,6 +185,7 @@ class IngredientController extends Controller
      *     path="/api/ingredients/stats",
      *     summary="Get ingredient statistics",
      *     tags={"Ingredients"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",

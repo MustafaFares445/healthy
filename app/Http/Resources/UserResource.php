@@ -55,7 +55,7 @@ class UserResource extends JsonResource
             'city' => $this->city,
             'phone' => $this->phone,
             'createdAt' => $this->created_at?->toDateString(),
-            'roles' => $this->getRolesNames()
+            'roles' => $this->getRoleNames()
         ];
     }
 }

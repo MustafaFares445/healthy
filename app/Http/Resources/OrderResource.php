@@ -106,24 +106,19 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => [
-                'id' => $this->user->id,
-                'name' => $this->user->name,
-            ],
+            'user' => UserResource::make($this->whenLoaded('user')),
             'total' => $this->total_cents / 100, // Convert cents to currency
             'status' => $this->status,
             'deliveryAddress' => $this->delivery_address,
             'deliveryTimeSlot' => $this->delivery_time_slot,
             'items' => $this->items->map(function ($item) {
                 return [
-                    'mealId' => $item->meal_id,
-                    'mealTitle' => $item->meal->title,
+                    'meal' => MealResource::make($item->meal),
                     'quantity' => $item->quantity,
-                    'unit_price' => $item->unit_price_cents / 100,
+                    'unitPrice' => $item->unit_price_cents / 100,
                     'subtotal' => ($item->quantity * $item->unit_price_cents) / 100,
                 ];
             }),
-            'placedAt' => $this->placed_at,
             'updatedAt' => $this->updated_at?->toDateString(),
         ];
     }

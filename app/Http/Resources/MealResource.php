@@ -100,13 +100,14 @@ class MealResource extends JsonResource
             'price' => $this->price_cents / 100, // Convert cents to currency
             'isAvailable' => $this->is_available,
             'availability' => [
-                'from' => $this->available_from,
-                'to' => $this->available_to,
+                'from' => $this->available_from->toTimeString(),
+                'to' => $this->available_to->toTimeString(),
             ],
             'dietType' => $this->diet_type,
-            'owner' => new UserResource($this->owner),
+            'owner' => UserResource::make($this->whenLoaded('owner')),
             'allergens' => AllergenResource::collection($this->whenLoaded('allergens')),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
+            'reviews'   => ReviewResource::collection($this->whenLoaded('reviews')),
             'createdAt' => $this->created_at?->toDateString(),
             'updatedAt' => $this->updated_at?->toDateString(),
         ];

@@ -12,6 +12,7 @@ use App\Models\OrderItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -22,6 +23,7 @@ class OrderController extends Controller
      *     path="/api/orders",
      *     summary="Get a list of orders",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="userId",
      *         in="query",
@@ -70,12 +72,85 @@ class OrderController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Order::with(['user', 'items.meal'])
-            ->orderBy('placed_at', 'desc');
+             ->latest();
 
         // Filter by user
         if ($request->has('userId')) {
             $query->where('user_id', $request->userId);
         }
+
+        // Filter by status
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->has('fromDate')) {
+            $query->whereDate('placed_at', '>=', $request->fromDate);
+        }
+
+
+        $orders = $query->paginate($request->input('perPage', 15));
+
+        return OrderResource::collection($orders);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/orders/user-self",
+     *     summary="Get a list of orders",
+     *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="query",
+     *         description="Filter by user ID",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by status",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="fromDate",
+     *         in="query",
+     *         description="Filter by start date",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="toDate",
+     *         in="query",
+     *         description="Filter by end date",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/OrderResource")
+     *         )
+     *     )
+     * )
+     */
+    public function userSelf(Request $request): AnonymousResourceCollection
+    {
+        $query = Order::with(['user', 'items.meal.owner'])
+            ->where('user_id' , Auth::id())
+            ->latest();
 
         // Filter by status
         if ($request->has('status')) {
@@ -95,11 +170,13 @@ class OrderController extends Controller
         return OrderResource::collection($orders);
     }
 
+
     /**
      * @OA\Post(
      *     path="/api/orders",
      *     summary="Create a new order",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreOrderRequest")
@@ -129,7 +206,7 @@ class OrderController extends Controller
             foreach ($request->items as $item) {
                 $meal = Meal::findOrFail($item['meal_id']);
 
-                $orderItem = OrderItem::create([
+                OrderItem::query()->create([
                     'order_id' => $order->id,
                     'meal_id' => $meal->id,
                     'quantity' => $item['quantity'],
@@ -156,6 +233,7 @@ class OrderController extends Controller
      *     path="/api/orders/{id}",
      *     summary="Get a specific order",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -172,8 +250,9 @@ class OrderController extends Controller
      */
     public function show(Order $order): OrderResource
     {
-        $order->load(['user', 'items.meal']);
-        return new OrderResource($order);
+        return OrderResource::make(
+            $order->load(['user', 'items.meal.owner'])
+        );
     }
 
     /**
@@ -181,6 +260,7 @@ class OrderController extends Controller
      *     path="/api/orders/{id}",
      *     summary="Update an existing order",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -222,6 +302,7 @@ class OrderController extends Controller
      *     path="/api/orders/{id}",
      *     summary="Delete an order",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -260,6 +341,7 @@ class OrderController extends Controller
      *     path="/api/orders/status-options",
      *     summary="Get order status options",
      *     tags={"Orders"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",

@@ -88,12 +88,14 @@ class MealController extends Controller
 
         // Search by title
         if ($request->has('search')) {
-            $query->where('title', 'like', '%' . $request->input('search') . '%');
+            $query->where('title', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('description', 'like', '%' . $request->input('search') . '%');
         }
 
-        $meals = $query->paginate($request->input('perPage', 15));
+        $meals = $query->latest()
+            ->paginate($request->input('perPage', 15));
 
-        return MealResource::collection($meals);
+        return MealResource::collection( $meals);
     }
 
     /**
@@ -101,6 +103,7 @@ class MealController extends Controller
      *     path="/api/meals",
      *     summary="Create a new meal",
      *     tags={"Meals"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreMealRequest")
@@ -128,7 +131,7 @@ class MealController extends Controller
 
             // Sync allergens
             if ($request->has('allergenIds')) {
-                $meal->allergens()->sync($request->allergen_ids);
+                $meal->allergens()->sync($request->allergenIds);
             }
 
             // Sync ingredients with quantities
@@ -177,7 +180,7 @@ class MealController extends Controller
      */
     public function show(Meal $meal): MealResource
     {
-        $meal->load(['owner', 'allergens', 'ingredients']);
+        $meal->load(['owner', 'allergens', 'ingredients' , 'reviews.user']);
         return new MealResource($meal);
     }
 
@@ -186,6 +189,7 @@ class MealController extends Controller
      *     path="/api/meals/{id}",
      *     summary="Update a specific meal",
      *     tags={"Meals"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -208,12 +212,13 @@ class MealController extends Controller
     {
         $meal = DB::transaction(function () use ($request, $meal) {
             $meal->update([
+                'owner_id' => $request->ownerId ?? $meal->owner_id,
                 'title' => $request->title ?? $meal->title,
                 'description' => $request->description ?? $meal->description,
                 'price_cents' => $request->has('price') ? $request->price * 100 : $meal->price_cents,
                 'is_available' => $request->has('isAvailable') ? $request->isAvailable : $meal->is_available,
                 'available_from' => $request->availableFrom ?? $meal->available_from,
-                'available_to' => $request->dietType ?? $meal->available_to,
+                'available_to' => $request->availableTo ?? $meal->available_to, // Fixed: Changed from dietType to availableTo
                 'diet_type' => $request->dietType ?? $meal->diet_type,
             ]);
 
@@ -252,6 +257,7 @@ class MealController extends Controller
      *     path="/api/meals/{id}",
      *     summary="Delete a specific meal",
      *     tags={"Meals"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -270,6 +276,8 @@ class MealController extends Controller
      */
     public function destroy(Meal $meal): JsonResponse
     {
+        $meal->ingredients()->detach();
+        $meal->allergens()->detach();
         $meal->delete();
 
         return response()->json([
@@ -295,7 +303,7 @@ class MealController extends Controller
     public function dietTypes(): JsonResponse
     {
         return response()->json([
-            'data' => Meal::dietTypes()
+            'data' => Meal::pluck('diet_type')->unique()->values()->toArray(),
         ]);
     }
 }

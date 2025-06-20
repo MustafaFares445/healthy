@@ -18,6 +18,7 @@ return new class extends Migration
             $table->float('fiber')->default(0);
             $table->float('carbohydrates')->default(0);
             $table->float('sodium')->default(0);
+            $table->timestamps();
         });
     }
 

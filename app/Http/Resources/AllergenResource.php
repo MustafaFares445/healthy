@@ -47,8 +47,8 @@ class AllergenResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'mealsCount' => $this->whenCounted('meals'),
-            'createdAt' => $this->created_at?->toDateString(),
-            'updatedAt' => $this->updated_at?->toDateString(),
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at
         ];
     }
 }

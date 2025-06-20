@@ -24,12 +24,12 @@ class Meal extends Model
 
     public function allergens()
     {
-        return $this->belongsToMany(Allergen::class, 'meal_allergens');
+        return $this->belongsToMany(Allergen::class, 'allergen_meal');
     }
 
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class, 'meal_ingredients')
+        return $this->belongsToMany(Ingredient::class, 'ingredient_meal')
                     ->withPivot('quantity', 'unit');
     }
 

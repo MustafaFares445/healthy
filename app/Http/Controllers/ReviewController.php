@@ -14,6 +14,7 @@ class ReviewController extends Controller
      *     path="/api/reviews",
      *     summary="Get all reviews",
      *     tags={"Reviews"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of reviews",
@@ -26,9 +27,9 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        $reviews = Review::with(['user', 'meal'])->get();
-
-        return ReviewResource::collection($reviews);
+        return ReviewResource::collection(
+            Review::with(['user', 'meal.owner'])->paginate(request()->get('perPage' , 15))
+        );
     }
 
     /**
@@ -36,6 +37,7 @@ class ReviewController extends Controller
      *     path="/api/reviews",
      *     summary="Create a new review",
      *     tags={"Reviews"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreReviewRequest")
@@ -56,7 +58,7 @@ class ReviewController extends Controller
             'comment' => $request->input('comment'),
         ]);
 
-        return ReviewResource::make($review);
+        return ReviewResource::make($review->load('meal'));
     }
 
     /**
@@ -64,6 +66,7 @@ class ReviewController extends Controller
      *     path="/api/reviews/{id}",
      *     summary="Get a specific review",
      *     tags={"Reviews"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -80,7 +83,7 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        return response()->json($review->load(['user', 'meal']));
+        return ReviewResource::make($review->load(['user' , 'meal.owner']));
     }
 
     /**
@@ -88,6 +91,7 @@ class ReviewController extends Controller
      *     path="/api/reviews/{id}",
      *     summary="Update a review",
      *     tags={"Reviews"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -115,7 +119,7 @@ class ReviewController extends Controller
             'comment' => $request->input('comment') ?? $review->comment,
         ]);
 
-       return ReviewResource::make($review);
+       return ReviewResource::make($review->load('meal'));
     }
 
     /**
@@ -123,6 +127,7 @@ class ReviewController extends Controller
      *     path="/api/reviews/{id}",
      *     summary="Delete a review",
      *     tags={"Reviews"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

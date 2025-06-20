@@ -8,14 +8,13 @@ class Ingredient extends Model
 {
     protected $fillable = [
         'name', 'calories', 'sugar', 'fat', 'protein',
-        'fiber', 'carbohydrates', 'sodium'
+        'fiber', 'carbohydrates', 'sodium','unit'
     ];
 
     public $timestamps = false;
 
     public function meals()
     {
-        return $this->belongsToMany(Meal::class, 'meal_ingredients')
-                    ->withPivot('quantity', 'unit');
+        return $this->belongsToMany(Meal::class, 'ingredient_meal');
     }
 }

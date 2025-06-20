@@ -3,13 +3,14 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
  *     schema="StoreIngredientRequest",
  *     title="Store Ingredient Request",
  *     description="Request body for storing a new ingredient",
- *     required={"name", "calories", "protein", "carbohydrates", "sugar", "fat", "fiber", "sodium"},
+ *     required={"name", "calories", "protein", "carbohydrates", "sugar", "fat", "fiber", "sodium", "unit"},
  *     @OA\Property(
  *         property="name",
  *         type="string",
@@ -63,6 +64,12 @@ use Illuminate\Foundation\Http\FormRequest;
  *         format="float",
  *         minimum=0,
  *         description="The sodium content of the ingredient"
+ *     ),
+ *     @OA\Property(
+ *         property="unit",
+ *         type="string",
+ *         description="The unit of measurement for the ingredient. Allowed values: tbsp, g, piece, l, ml, cup, spoon",
+ *         enum={"tbsp", "g", "piece", "l", "ml", "cup", "spoon"}
  *     )
  * )
  */
@@ -84,6 +91,11 @@ class StoreIngredientRequest extends FormRequest
             'fat' => 'required|numeric|min:0',
             'fiber' => 'required|numeric|min:0',
             'sodium' => 'required|numeric|min:0',
+            'unit'   => [
+                'required',
+                'string',
+                Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml' , 'cup' , 'spoon'])
+            ]
         ];
     }
 

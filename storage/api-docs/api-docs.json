@@ -48,7 +48,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -77,40 +82,15 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/allergens/{id}": {
-            "get": {
-                "tags": [
-                    "Allergens"
-                ],
-                "summary": "Get a specific allergen",
-                "operationId": "6854780ae52ec4062731d8043dd6ef49",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the allergen",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AllergenResource"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "put": {
                 "tags": [
                     "Allergens"
@@ -149,7 +129,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -175,7 +160,12 @@
                     "422": {
                         "description": "Cannot delete allergen as it is associated with one or more meals"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/allergens/stats": {
@@ -194,10 +184,10 @@
                                     "properties": {
                                         "data": {
                                             "properties": {
-                                                "total_allergens": {
+                                                "totalAllergens": {
                                                     "type": "integer"
                                                 },
-                                                "most_common_allergen": {
+                                                "mostCommonAllergen": {
                                                     "properties": {
                                                         "id": {
                                                             "type": "integer"
@@ -220,7 +210,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/register": {
@@ -240,7 +235,7 @@
                                     "name",
                                     "email",
                                     "password",
-                                    "passwordCnfirmation"
+                                    "password_confirmation"
                                 ],
                                 "properties": {
                                     "name": {
@@ -257,7 +252,7 @@
                                         "format": "password",
                                         "example": "password"
                                     },
-                                    "passwordCnfirmation": {
+                                    "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
                                         "example": "password"
@@ -315,7 +310,7 @@
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john@example.com"
+                                        "example": "admin@example.com"
                                     },
                                     "password": {
                                         "type": "string",
@@ -342,6 +337,9 @@
                                         "token": {
                                             "type": "string",
                                             "example": "1|abcdef123456"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserResource"
                                         }
                                     },
                                     "type": "object"
@@ -476,40 +474,15 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/ingredients/{id}": {
-            "get": {
-                "tags": [
-                    "Ingredients"
-                ],
-                "summary": "Get a specific ingredient",
-                "operationId": "0a054220b0a2b30633ee13a9d92f6a97",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the ingredient",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/IngredientResource"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "put": {
                 "tags": [
                     "Ingredients"
@@ -548,7 +521,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -574,7 +552,12 @@
                     "422": {
                         "description": "Cannot delete ingredient as it is used in one or more meals"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/ingredients/stats": {
@@ -609,7 +592,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/meals": {
@@ -710,7 +698,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/meals/{id}": {
@@ -782,7 +775,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -818,7 +816,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/meals/diet-types": {
@@ -916,7 +919,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -945,7 +953,91 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/user-self": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get a list of orders",
+                "operationId": "4ac6f21a2d2099e636ca1790c49f73bb",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "Filter by user ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "description": "Filter by start date",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "description": "Filter by end date",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OrderResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/{id}": {
@@ -977,7 +1069,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -1017,7 +1114,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1043,7 +1145,12 @@
                     "422": {
                         "description": "Only pending orders can be deleted"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/orders/status-options": {
@@ -1067,7 +1174,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/reviews": {
@@ -1091,7 +1203,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -1120,7 +1237,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/reviews/{id}": {
@@ -1152,7 +1274,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -1192,7 +1319,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -1215,11 +1347,19 @@
                     "204": {
                         "description": "Review deleted successfully"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users": {
             "get": {
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get all users",
                 "operationId": "c457726701591d1183b53aa71fc13441",
                 "responses": {
@@ -1236,9 +1376,17 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Create a new user",
                 "operationId": "592819a0265360b2014512d6dbfaf0e7",
                 "requestBody": {
@@ -1262,11 +1410,19 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/users/{id}": {
             "get": {
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get a specific user",
                 "operationId": "36a33ff774d5cba33c039dec2c3e0287",
                 "parameters": [
@@ -1290,9 +1446,17 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Update a user",
                 "operationId": "b9091397c8b25f12c6adb74be6ce3a5a",
                 "parameters": [
@@ -1326,9 +1490,17 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Delete a user",
                 "operationId": "fa56cffde745d3f152f95cbacd936c0b",
                 "parameters": [
@@ -1345,155 +1517,12 @@
                     "204": {
                         "description": "User deleted"
                     }
-                }
-            }
-        },
-        "/api/user-health-infos": {
-            "get": {
-                "tags": [
-                    "User Health Info"
-                ],
-                "summary": "Get all user health infos",
-                "operationId": "0517a9cea081680431efb90d32cbfacf",
-                "responses": {
-                    "200": {
-                        "description": "List of user health infos",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/UserHealthInfoResource"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "User Health Info"
-                ],
-                "summary": "Create a new user health info",
-                "operationId": "f92b857961826d01cf8be4e66fed0847",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/StoreUserHealthInfoRequest"
-                            }
-                        }
-                    }
                 },
-                "responses": {
-                    "201": {
-                        "description": "User health info created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserHealthInfoResource"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user-health-infos/{id}": {
-            "get": {
-                "tags": [
-                    "User Health Info"
-                ],
-                "summary": "Get a specific user health info",
-                "operationId": "ff1f6268dae47d62892ae1b75fcd6267",
-                "parameters": [
+                "security": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the user health info",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "bearerAuth": []
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "User health info details",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserHealthInfoResource"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "User Health Info"
-                ],
-                "summary": "Update a user health info",
-                "operationId": "2b75ffb305f38da7fd187158d2ccdcf2",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the user health info",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UpdateUserHealthInfoRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "User health info updated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserHealthInfoResource"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "User Health Info"
-                ],
-                "summary": "Delete a user health info",
-                "operationId": "54ad596d541d6127de681407b74496d5",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the user health info",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "User health info deleted"
-                    }
-                }
+                ]
             }
         }
     },
@@ -1526,7 +1555,8 @@
                     "sugar",
                     "fat",
                     "fiber",
-                    "sodium"
+                    "sodium",
+                    "unit"
                 ],
                 "properties": {
                     "name": {
@@ -1574,6 +1604,19 @@
                         "type": "number",
                         "format": "float",
                         "minimum": 0
+                    },
+                    "unit": {
+                        "description": "The unit of measurement for the ingredient. Allowed values: tbsp, g, piece, l, ml, cup, spoon",
+                        "type": "string",
+                        "enum": [
+                            "tbsp",
+                            "g",
+                            "piece",
+                            "l",
+                            "ml",
+                            "cup",
+                            "spoon"
+                        ]
                     }
                 },
                 "type": "object"
@@ -1925,6 +1968,19 @@
                         "description": "The sodium content of the ingredient",
                         "type": "number",
                         "minimum": 0
+                    },
+                    "unit": {
+                        "description": "The unit of measurement for the ingredient. Allowed values: tbsp, g, piece, l, ml, cup, spoon",
+                        "type": "string",
+                        "enum": [
+                            "tbsp",
+                            "g",
+                            "piece",
+                            "l",
+                            "ml",
+                            "cup",
+                            "spoon"
+                        ]
                     }
                 },
                 "type": "object"
@@ -2237,6 +2293,10 @@
                                 "description": "Sodium content in milligrams",
                                 "type": "number",
                                 "format": "float"
+                            },
+                            "unit": {
+                                "description": "Unit of measurement for the ingredient's nutritional values",
+                                "type": "string"
                             }
                         },
                         "type": "object"
@@ -2245,15 +2305,26 @@
                         "description": "Number of meals associated with this ingredient",
                         "type": "integer"
                     },
-                    "createdAt": {
-                        "description": "The timestamp when the ingredient was created",
+                    "mealQuantity": {
+                        "description": "Quantity of the ingredient in the meal (if loaded via pivot)",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "mealUnit": {
+                        "description": "Unit of measurement for the ingredient in the meal (if loaded via pivot)",
                         "type": "string",
-                        "format": "date-time"
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "description": "The date when the ingredient was created",
+                        "type": "string",
+                        "format": "date"
                     },
                     "updatedAt": {
-                        "description": "The timestamp when the ingredient was last updated",
+                        "description": "The date when the ingredient was last updated",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date"
                     }
                 },
                 "type": "object"
@@ -2545,8 +2616,8 @@
             "description": "Reviews"
         },
         {
-            "name": "User Health Info",
-            "description": "User Health Info"
+            "name": "Users",
+            "description": "Users"
         }
     ]
 }

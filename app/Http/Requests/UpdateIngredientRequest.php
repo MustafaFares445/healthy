@@ -56,6 +56,12 @@ use Illuminate\Validation\Rule;
  *         type="number",
  *         minimum=0,
  *         description="The sodium content of the ingredient"
+ *     ),
+ *     @OA\Property(
+ *         property="unit",
+ *         type="string",
+ *         description="The unit of measurement for the ingredient. Allowed values: tbsp, g, piece, l, ml, cup, spoon",
+ *         enum={"tbsp", "g", "piece", "l", "ml", "cup", "spoon"}
  *     )
  * )
  */
@@ -82,6 +88,11 @@ class UpdateIngredientRequest extends FormRequest
             'fat' => 'sometimes|numeric|min:0',
             'fiber' => 'sometimes|numeric|min:0',
             'sodium' => 'sometimes|numeric|min:0',
+            'unit'   => [
+                'sometimes',
+                'string',
+                Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml' , 'cup' , 'spoon'])
+            ]
         ];
     }
 }

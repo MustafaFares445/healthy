@@ -15,6 +15,8 @@ class UserController extends Controller
      * @OA\Get(
      *     path="/api/users",
      *     summary="Get all users",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="List of users",
@@ -27,13 +29,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(
+            User::with('roles')->get()
+        );
     }
 
     /**
      * @OA\Post(
      *     path="/api/users",
      *     summary="Create a new user",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreUserRequest")
@@ -56,6 +62,8 @@ class UserController extends Controller
      * @OA\Get(
      *     path="/api/users/{id}",
      *     summary="Get a specific user",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -78,6 +86,8 @@ class UserController extends Controller
      * @OA\Put(
      *     path="/api/users/{id}",
      *     summary="Update a user",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -106,6 +116,8 @@ class UserController extends Controller
      * @OA\Delete(
      *     path="/api/users/{id}",
      *     summary="Delete a user",
+     *     tags={"Users"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

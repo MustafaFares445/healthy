@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
 
         $owner = User::factory()->create([
             'name' => 'Owner User',
-            'email' => 'owner@example   .com',
+            'email' => 'owner@example.com',
         ]);
 
         $owner->assignRole('owner');

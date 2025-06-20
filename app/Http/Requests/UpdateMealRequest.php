@@ -94,7 +94,7 @@ class UpdateMealRequest extends FormRequest
     public function rules()
     {
         return [
-            'ownerId' => 'sometimes|exists:owners,id',
+            'ownerId' => 'sometimes|exists:users,id',
             'title' => 'sometimes|string|max:150',
             'description' => 'nullable|string',
             'price' => 'sometimes|numeric|min:0',
@@ -112,7 +112,7 @@ class UpdateMealRequest extends FormRequest
             'ingredients.*.quantity' => 'required|numeric|min:0',
             'ingredients.*.unit' => [
                 'required',
-                Rule::in(['tbsp', 'g', 'piece', 'l'])
+                Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml' , 'cup' , 'spoon'])
             ],
         ];
     }

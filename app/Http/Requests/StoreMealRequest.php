@@ -113,7 +113,7 @@ class StoreMealRequest extends FormRequest
             'ingredients.*.quantity' => 'required|numeric|min:0',
             'ingredients.*.unit' => [
                 'required',
-                Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml'])
+                Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml' , 'cup' , 'spoon'])
             ],
         ];
     }

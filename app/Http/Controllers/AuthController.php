@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -20,11 +21,11 @@ class AuthController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"name", "email", "password", "passwordCnfirmation"},
+     *             required={"name", "email", "password", "password_confirmation"},
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password"),
-     *             @OA\Property(property="passwordCnfirmation", type="string", format="password", example="password")
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password")
      *         )
      *     ),
      *     @OA\Response(
@@ -72,7 +73,7 @@ class AuthController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"email", "password"},
-     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="email", type="string", format="email", example="admin@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password")
      *         )
      *     ),
@@ -81,7 +82,8 @@ class AuthController extends Controller
      *         description="User logged in successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="User logged in successfully"),
-     *             @OA\Property(property="token", type="string", example="1|abcdef123456")
+     *             @OA\Property(property="token", type="string", example="1|abcdef123456"),
+     *             @OA\Property(property="user", type="object", ref="#/components/schemas/UserResource")
      *         )
      *     ),
      *     @OA\Response(
@@ -105,11 +107,12 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'User logged in successfully',
             'token' => $token,
+            'user' => UserResource::make($user)
         ]);
     }
 
@@ -134,9 +137,9 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function logout(Request $request)
+    public function logout()
     {
-        $request->user()->currentAccessToken()->delete();
+         JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json([
             'message' => 'User logged out successfully',

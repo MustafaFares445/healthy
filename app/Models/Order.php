@@ -11,11 +11,6 @@ class Order extends Model
         'delivery_address', 'delivery_time_slot'
     ];
 
-    protected $casts = [
-        'placed_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
     public function user()
     {
         return $this->belongsTo(User::class);

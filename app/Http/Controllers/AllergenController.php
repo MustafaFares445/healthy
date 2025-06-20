@@ -19,6 +19,7 @@ class AllergenController extends Controller
      *     path="/api/allergens",
      *     summary="Get a list of allergens",
      *     tags={"Allergens"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
@@ -64,6 +65,7 @@ class AllergenController extends Controller
      *     path="/api/allergens",
      *     summary="Create a new allergen",
      *     tags={"Allergens"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(ref="#/components/schemas/StoreAllergenRequest")
@@ -88,35 +90,11 @@ class AllergenController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/allergens/{id}",
-     *     summary="Get a specific allergen",
-     *     tags={"Allergens"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID of the allergen",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(ref="#/components/schemas/AllergenResource")
-     *     )
-     * )
-     */
-    public function show(Allergen $allergen): AllergenResource
-    {
-        $allergen->loadCount('meals');
-        return new AllergenResource($allergen);
-    }
-
-    /**
      * @OA\Put(
      *     path="/api/allergens/{id}",
      *     summary="Update an existing allergen",
      *     tags={"Allergens"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -152,6 +130,7 @@ class AllergenController extends Controller
      *     path="/api/allergens/{id}",
      *     summary="Delete an allergen",
      *     tags={"Allergens"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -190,6 +169,7 @@ class AllergenController extends Controller
      *     path="/api/allergens/stats",
      *     summary="Get allergen usage statistics",
      *     tags={"Allergens"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -199,11 +179,11 @@ class AllergenController extends Controller
      *                 property="data",
      *                 type="object",
      *                 @OA\Property(
-     *                     property="total_allergens",
+     *                     property="totalAllergens",
      *                     type="integer"
      *                 ),
      *                 @OA\Property(
-     *                     property="most_common_allergen",
+     *                     property="mostCommonAllergen",
      *                     type="object",
      *                     @OA\Property(property="id", type="integer"),
      *                     @OA\Property(property="name", type="string"),
@@ -222,8 +202,8 @@ class AllergenController extends Controller
 
         return response()->json([
             'data' => [
-                'total_allergens' => Allergen::count(),
-                'most_common_allergen' => $mostCommon ? [
+                'totalAllergens' => Allergen::count(),
+                'mostCommonAllergen' => $mostCommon ? [
                     'id' => $mostCommon->id,
                     'name' => $mostCommon->name,
                     'meals_count' => $mostCommon->meals_count

@@ -70,6 +70,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *             type="number",
  *             format="float",
  *             description="Sodium content in milligrams"
+ *         ),
+ *         @OA\Property(
+ *             property="unit",
+ *             type="string",
+ *             description="Unit of measurement for the ingredient's nutritional values"
  *         )
  *     ),
  *     @OA\Property(
@@ -78,16 +83,29 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="Number of meals associated with this ingredient"
  *     ),
  *     @OA\Property(
+ *         property="mealQuantity",
+ *         type="number",
+ *         format="float",
+ *         nullable=true,
+ *         description="Quantity of the ingredient in the meal (if loaded via pivot)"
+ *     ),
+ *     @OA\Property(
+ *         property="mealUnit",
+ *         type="string",
+ *         nullable=true,
+ *         description="Unit of measurement for the ingredient in the meal (if loaded via pivot)"
+ *     ),
+ *     @OA\Property(
  *         property="createdAt",
  *         type="string",
- *         format="date-time",
- *         description="The timestamp when the ingredient was created"
+ *         format="date",
+ *         description="The date when the ingredient was created"
  *     ),
  *     @OA\Property(
  *         property="updatedAt",
  *         type="string",
- *         format="date-time",
- *         description="The timestamp when the ingredient was last updated"
+ *         format="date",
+ *         description="The date when the ingredient was last updated"
  *     )
  * )
  */
@@ -108,8 +126,11 @@ class IngredientResource extends JsonResource
                 ],
                 'fiber' => $this->fiber,
                 'sodium' => $this->sodium,
+                'unit'  => $this->unit,
             ],
             'mealsCount' => $this->whenCounted('meals'),
+            'mealQuantity'  => $this->whenPivotLoaded('ingredient_meal' , $this->pivot?->quantity),
+            'mealUnit'  => $this->whenPivotLoaded('ingredient_meal' , $this->pivot?->unit),
             'createdAt' => $this->created_at?->toDateString(),
             'updatedAt' => $this->updated_at?->toDateString(),
         ];
