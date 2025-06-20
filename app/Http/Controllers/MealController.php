@@ -76,7 +76,7 @@ class MealController extends Controller
             $query->where('is_available', $request->boolean('available'));
         }
 
-        // Filter by diet type
+        // Filter by diet typeOwner
         if ($request->has('dietType')) {
             $query->where('diet_type', $request->input('dietType'));
         }
