@@ -384,6 +384,107 @@
                 ]
             }
         },
+        "/api/home/meals/matched": {
+            "get": {
+                "tags": [
+                    "Homepage"
+                ],
+                "summary": "Get matched meals for authenticated user",
+                "operationId": "5be5b7ffc502bc1a9f228b378ff88a2a",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MealResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home/meals/types": {
+            "get": {
+                "tags": [
+                    "Homepage"
+                ],
+                "summary": "Get meals filtered by diet type",
+                "operationId": "9fd4dde0e70d772de9aec032fb02f619",
+                "parameters": [
+                    {
+                        "name": "dietType",
+                        "in": "query",
+                        "description": "Diet type to filter meals",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "vegetarian",
+                                "vegan",
+                                "keto",
+                                "paleo",
+                                "gluten-free",
+                                "dairy-free"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MealResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid diet type"
+                    }
+                }
+            }
+        },
         "/api/ingredients": {
             "get": {
                 "tags": [
@@ -817,6 +918,147 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/api/meals/search": {
+            "post": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Search meals with advanced filters",
+                "operationId": "2e1ddd8756b3811ca2839a31346b55cf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "query": {
+                                        "description": "Search query for title and description",
+                                        "type": "string",
+                                        "example": "healthy breakfast"
+                                    },
+                                    "dietType": {
+                                        "description": "Filter by diet type",
+                                        "type": "string",
+                                        "example": "vegetarian"
+                                    },
+                                    "minPrice": {
+                                        "description": "Minimum price filter",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 5
+                                    },
+                                    "maxPrice": {
+                                        "description": "Maximum price filter",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 25
+                                    },
+                                    "isAvailable": {
+                                        "description": "Filter by availability",
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "allergenIds": {
+                                        "description": "Exclude meals with these allergens",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "ingredientIds": {
+                                        "description": "Include meals with these ingredients",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "minRating": {
+                                        "description": "Minimum rating filter",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 4
+                                    },
+                                    "ownerId": {
+                                        "description": "Filter by owner ID",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "sortBy": {
+                                        "description": "Sort field",
+                                        "type": "string",
+                                        "enum": [
+                                            "title",
+                                            "price_cents",
+                                            "rate",
+                                            "created_at"
+                                        ],
+                                        "example": "price_cents"
+                                    },
+                                    "sortDirection": {
+                                        "description": "Sort direction",
+                                        "type": "string",
+                                        "enum": [
+                                            "asc",
+                                            "desc"
+                                        ],
+                                        "example": "asc"
+                                    },
+                                    "perPage": {
+                                        "description": "Number of items per page",
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "page": {
+                                        "description": "Page number",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Search results",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/MealResource"
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Pagination metadata",
+                                            "type": "object"
+                                        },
+                                        "links": {
+                                            "description": "Pagination links",
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/api/meals/diet-types": {
@@ -2137,6 +2379,18 @@
                                 "unit": "g"
                             }
                         ]
+                    },
+                    "images": {
+                        "description": "Array of image files for the meal",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "example": [
+                            "image1.jpg",
+                            "image2.png"
+                        ]
                     }
                 },
                 "type": "object"
@@ -2456,6 +2710,13 @@
                             "$ref": "#/components/schemas/IngredientResource"
                         }
                     },
+                    "images": {
+                        "description": "List of ingredients in the meal",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MediaResource"
+                        }
+                    },
                     "createdAt": {
                         "description": "The creation date of the meal",
                         "type": "string",
@@ -2465,6 +2726,105 @@
                         "description": "The last update date of the meal",
                         "type": "string",
                         "format": "date"
+                    }
+                },
+                "type": "object"
+            },
+            "MediaResource": {
+                "title": "MediaResource",
+                "description": "Media resource representation for files and images",
+                "required": [
+                    "id",
+                    "name",
+                    "fileName",
+                    "collection",
+                    "url",
+                    "size",
+                    "type",
+                    "extension",
+                    "caption"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Unique identifier for the media",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "Name of the media file without extension",
+                        "type": "string",
+                        "example": "nature_photo"
+                    },
+                    "fileName": {
+                        "description": "Complete file name with extension",
+                        "type": "string",
+                        "example": "nature_photo.jpg"
+                    },
+                    "collection": {
+                        "description": "Collection name where the media is stored",
+                        "type": "string",
+                        "example": "photos"
+                    },
+                    "url": {
+                        "description": "Full URL to watermarked WebP version",
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://example.com/storage/media/conversions/nature_photo-watermarked-webp.webp"
+                    },
+                    "originalUrl": {
+                        "description": "Full URL to original file",
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://example.com/storage/media/nature_photo.jpg"
+                    },
+                    "size": {
+                        "description": "Human-readable file size",
+                        "type": "string",
+                        "example": "2.5 MB"
+                    },
+                    "type": {
+                        "description": "Type of media",
+                        "type": "string",
+                        "enum": [
+                            "image",
+                            "video",
+                            "document",
+                            "audio",
+                            "other"
+                        ],
+                        "example": "image"
+                    },
+                    "extension": {
+                        "description": "File extension",
+                        "type": "string",
+                        "example": "jpg"
+                    },
+                    "caption": {
+                        "description": "Caption or description of the media",
+                        "type": "string",
+                        "example": "Beautiful nature photograph"
+                    },
+                    "width": {
+                        "description": "Width in pixels (images only)",
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1920,
+                        "nullable": true
+                    },
+                    "height": {
+                        "description": "Height in pixels (images only)",
+                        "type": "integer",
+                        "format": "int32",
+                        "example": 1080,
+                        "nullable": true
+                    },
+                    "thumbnailUrl": {
+                        "description": "URL of thumbnail (watermarked WebP)",
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://example.com/storage/media/conversions/nature_photo-thumb.webp",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -2663,6 +3023,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Homepage",
+            "description": "Homepage"
         },
         {
             "name": "Ingredients",

@@ -145,4 +145,9 @@ class AuthController extends Controller
             'message' => 'User logged out successfully',
         ]);
     }
+
+    public function self()
+    {
+        return UserResource::make(auth()->user());
+    }
 }

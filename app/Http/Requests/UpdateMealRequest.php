@@ -81,6 +81,13 @@ use Illuminate\Validation\Rule;
  *         ),
  *         description="Array of ingredients with their quantities and units",
  *         example={{"id": 1, "quantity": 2.5, "unit": "g"}}
+ *     ),
+ *     @OA\Property(
+ *         property="images",
+ *         type="array",
+ *         @OA\Items(type="string", format="binary"),
+ *         description="Array of image files for the meal",
+ *         example={"image1.jpg", "image2.png"}
  *     )
  * )
  */
@@ -114,6 +121,8 @@ class UpdateMealRequest extends FormRequest
                 'required',
                 Rule::in(['tbsp', 'g', 'piece', 'l' , 'ml' , 'cup' , 'spoon'])
             ],
+            'images' => 'sometimes|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ];
     }
 }

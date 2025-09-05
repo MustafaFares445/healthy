@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Meal extends Model
+class Meal extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $fillable = [
         'owner_id', 'title', 'description', 'price_cents', 'is_available',
-        'available_from', 'available_to', 'diet_type'
+        'available_from', 'available_to', 'diet_type', 'rate'
     ];
 
     protected $casts = [

@@ -76,6 +76,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="List of ingredients in the meal"
  *     ),
  *     @OA\Property(
+ *          property="images",
+ *          type="array",
+ *          @OA\Items(ref="#/components/schemas/MediaResource"),
+ *          description="List of ingredients in the meal"
+ *      ),
+ *     @OA\Property(
  *         property="createdAt",
  *         type="string",
  *         format="date",
@@ -104,10 +110,13 @@ class MealResource extends JsonResource
                 'to' => $this->available_to->toTimeString(),
             ],
             'dietType' => $this->diet_type,
+            'rate' => $this->rate,
             'owner' => UserResource::make($this->whenLoaded('owner')),
             'allergens' => AllergenResource::collection($this->whenLoaded('allergens')),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
             'reviews'   => ReviewResource::collection($this->whenLoaded('reviews')),
+            'primaryImage' => MediaResource::make(~$this->whenLoaded('media' , $this->getFirstMedia('images'))),
+            'images' => MediaResource::collection($this->whenLoaded('media' , $this->getMedia('images'))),
             'createdAt' => $this->created_at?->toDateString(),
             'updatedAt' => $this->updated_at?->toDateString(),
         ];

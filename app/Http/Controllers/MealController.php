@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchMealRequest;
 use App\Http\Requests\StoreMealRequest;
 use App\Http\Requests\UpdateMealRequest;
 use App\Http\Resources\MealResource;
@@ -68,7 +69,7 @@ class MealController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Meal::query()
-            ->with(['owner', 'allergens', 'ingredients'])
+            ->with(['owner', 'allergens', 'ingredients', 'media'])
             ->orderBy('created_at', 'desc');
 
         // Filter by availability
@@ -95,7 +96,7 @@ class MealController extends Controller
         $meals = $query->latest()
             ->paginate($request->input('perPage', 15));
 
-        return MealResource::collection( $meals);
+        return MealResource::collection($meals);
     }
 
     /**
@@ -133,6 +134,8 @@ class MealController extends Controller
             if ($request->has('allergenIds')) {
                 $meal->allergens()->sync($request->allergenIds);
             }
+
+            $this->handleMediaUpload($request , $meal);
 
             // Sync ingredients with quantities
             if ($request->has('ingredients')) {
@@ -227,6 +230,7 @@ class MealController extends Controller
                 $meal->allergens()->sync($request->allergen_ids);
             }
 
+            $this->handleMediaUpdate($request , $meal);
             // Sync ingredients if provided
             if ($request->has('ingredients')) {
                 $ingredientsData = collect($request->ingredients)
@@ -283,6 +287,193 @@ class MealController extends Controller
         return response()->json([
             'message' => 'Meal deleted successfully'
         ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/meals/search",
+     *     summary="Search meals with advanced filters",
+     *     tags={"Meals"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="query",
+     *                 type="string",
+     *                 description="Search query for title and description",
+     *                 example="healthy breakfast"
+     *             ),
+     *             @OA\Property(
+     *                 property="dietType",
+     *                 type="string",
+     *                 description="Filter by diet type",
+     *                 example="vegetarian"
+     *             ),
+     *             @OA\Property(
+     *                 property="minPrice",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Minimum price filter",
+     *                 example=5.00
+     *             ),
+     *             @OA\Property(
+     *                 property="maxPrice",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Maximum price filter",
+     *                 example=25.00
+     *             ),
+     *             @OA\Property(
+     *                 property="isAvailable",
+     *                 type="boolean",
+     *                 description="Filter by availability",
+     *                 example=true
+     *             ),
+     *             @OA\Property(
+     *                 property="allergenIds",
+     *                 type="array",
+     *                 @OA\Items(type="integer"),
+     *                 description="Exclude meals with these allergens",
+     *                 example={1, 2, 3}
+     *             ),
+     *             @OA\Property(
+     *                 property="ingredientIds",
+     *                 type="array",
+     *                 @OA\Items(type="integer"),
+     *                 description="Include meals with these ingredients",
+     *                 example={1, 2, 3}
+     *             ),
+     *             @OA\Property(
+     *                 property="minRating",
+     *                 type="number",
+     *                 format="float",
+     *                 description="Minimum rating filter",
+     *                 example=4.0
+     *             ),
+     *             @OA\Property(
+     *                 property="ownerId",
+     *                 type="integer",
+     *                 description="Filter by owner ID",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="sortBy",
+     *                 type="string",
+     *                 enum={"title", "price_cents", "rate", "created_at"},
+     *                 description="Sort field",
+     *                 example="price_cents"
+     *             ),
+     *             @OA\Property(
+     *                 property="sortDirection",
+     *                 type="string",
+     *                 enum={"asc", "desc"},
+     *                 description="Sort direction",
+     *                 example="asc"
+     *             ),
+     *             @OA\Property(
+     *                 property="perPage",
+     *                 type="integer",
+     *                 description="Number of items per page",
+     *                 example=15
+     *             ),
+     *             @OA\Property(
+     *                 property="page",
+     *                 type="integer",
+     *                 description="Page number",
+     *                 example=1
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/MealResource")
+     *             ),
+     *             @OA\Property(
+     *                 property="meta",
+     *                 type="object",
+     *                 description="Pagination metadata"
+     *             ),
+     *             @OA\Property(
+     *                 property="links",
+     *                 type="object",
+     *                 description="Pagination links"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function search(SearchMealRequest $request): AnonymousResourceCollection
+    {
+        $query = Meal::query()
+            ->with(['owner', 'allergens', 'ingredients', 'reviews'])
+            ->select('meals.*');
+
+        // Text search in title and description
+        if ($request->filled('query')) {
+            $searchTerm = $request->input('query');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', "%{$searchTerm}%")
+                  ->orWhere('description', 'like', "%{$searchTerm}%");
+            });
+        }
+
+        // Filter by diet type
+        if ($request->filled('dietType')) {
+            $query->where('diet_type', $request->input('dietType'));
+        }
+
+        // Price range filter
+        if ($request->filled('minPrice')) {
+            $query->where('price_cents', '>=', $request->input('minPrice') * 100);
+        }
+        if ($request->filled('maxPrice')) {
+            $query->where('price_cents', '<=', $request->input('maxPrice') * 100);
+        }
+
+        // Availability filter
+        if ($request->has('isAvailable')) {
+            $query->where('is_available', $request->boolean('isAvailable'));
+        }
+
+        // Exclude meals with specific allergens
+        if ($request->filled('allergenIds')) {
+            $query->whereDoesntHave('allergens', function ($q) use ($request) {
+                $q->whereIn('allergens.id', $request->input('allergenIds'));
+            });
+        }
+
+        // Include meals with specific ingredients
+        if ($request->filled('ingredientIds')) {
+            $query->whereHas('ingredients', function ($q) use ($request) {
+                $q->whereIn('ingredients.id', $request->input('ingredientIds'));
+            });
+        }
+
+        // Minimum rating filter
+        if ($request->filled('minRating')) {
+            $query->where('rate', '>=', $request->input('minRating'));
+        }
+
+        // Filter by owner
+        if ($request->filled('ownerId')) {
+            $query->where('owner_id', $request->input('ownerId'));
+        }
+
+        // Sorting
+        $sortBy = $request->input('sortBy', 'created_at');
+        $sortDirection = $request->input('sortDirection', 'desc');
+        $query->orderBy($sortBy, $sortDirection);
+
+        // Pagination
+        $perPage = $request->input('perPage', 15);
+        $meals = $query->paginate($perPage);
+
+        return MealResource::collection($meals);
     }
 
     /**
