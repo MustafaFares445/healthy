@@ -1,15 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Middleware\AdminOnly;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 // Homepage routes
 Route::get('/home/meals/matched', [\App\Http\Controllers\MealController::class, 'matchedMeals']);
