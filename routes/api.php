@@ -12,10 +12,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Homepage routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals']);
-});
-
+Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals'])->middleware('auth:sanctum');
 Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);

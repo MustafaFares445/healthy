@@ -115,8 +115,8 @@ class MealResource extends JsonResource
             'allergens' => AllergenResource::collection($this->whenLoaded('allergens')),
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
             'reviews'   => ReviewResource::collection($this->whenLoaded('reviews')),
-            'primaryImage' => MediaResource::make($this->whenLoaded('media' , $this->getFirstMedia('images'))),
-            'images' => MediaResource::collection($this->whenLoaded('media' , $this->getMedia('images'))),
+            'primaryImage' => MediaResource::make($this->getFirstMedia('images')),
+            'images' => MediaResource::collection($this->getMedia('images')),
             'createdAt' => $this->created_at?->toDateString(),
             'updatedAt' => $this->updated_at?->toDateString(),
         ];
