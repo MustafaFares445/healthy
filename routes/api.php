@@ -38,7 +38,7 @@ Route::middleware(AdminOnly::class)->group(function(){
     Route::apiResource('ingredients', \App\Http\Controllers\IngredientController::class)->except(['index' , 'show']);
 
     Route::get('allergens/stats', [\App\Http\Controllers\AllergenController::class, 'stats']);
-    Route::apiResource('allergens', \App\Http\Controllers\AllergenController::class)->except(['index' , 'show']);
+    Route::apiResource('allergens', \App\Http\Controllers\AllergenController::class);
 
     Route::apiResource('users', \App\Http\Controllers\UserController::class);
 });
