@@ -14,7 +14,7 @@ Route::post('meals/search', [\App\Http\Controllers\MealController::class, 'searc
 Route::apiResource('meals', \App\Http\Controllers\MealController::class)->only(['index' , 'show']);
 Route::get('/ingredients' , [IngredientController::class , 'index']);
 
-Route::middleware(AdminOnly::class)->group(function(){
+//Route::middleware(AdminOnly::class)->group(function(){
 
     Route::apiResource('reviews', \App\Http\Controllers\ReviewController::class);
 
@@ -32,7 +32,7 @@ Route::middleware(AdminOnly::class)->group(function(){
     Route::apiResource('allergens', \App\Http\Controllers\AllergenController::class);
 
     Route::apiResource('users', \App\Http\Controllers\UserController::class);
-});
+//});
 
 
 Route::post('/login' , [AuthController::class , 'login']);
