@@ -152,7 +152,7 @@ class AuthController extends Controller
      *     summary="Get authenticated user information",
      *     description="Returns the currently authenticated user's details",
      *     operationId="getSelf",
-     *     tags={"User"},
+     *     tags={"Authentication"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
      *         response=200,

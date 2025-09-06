@@ -387,7 +387,7 @@
         "/api/auth/self": {
             "get": {
                 "tags": [
-                    "User"
+                    "Authentication"
                 ],
                 "summary": "Get authenticated user information",
                 "description": "Returns the currently authenticated user's details",
@@ -3050,10 +3050,6 @@
         {
             "name": "Authentication",
             "description": "Authentication"
-        },
-        {
-            "name": "User",
-            "description": "User"
         },
         {
             "name": "Homepage",
