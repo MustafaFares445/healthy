@@ -384,6 +384,33 @@
                 ]
             }
         },
+        "/api/auth/self": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get authenticated user information",
+                "description": "Returns the currently authenticated user's details",
+                "operationId": "getSelf",
+                "responses": {
+                    "200": {
+                        "description": "Successfully retrieved user information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/home/meals/matched": {
             "get": {
                 "tags": [
@@ -3023,6 +3050,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Homepage",

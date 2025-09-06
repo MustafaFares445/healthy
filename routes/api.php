@@ -47,4 +47,4 @@ Route::middleware(AdminOnly::class)->group(function(){
 Route::post('/login' , [AuthController::class , 'login']);
 Route::post('/register' , [AuthController::class , 'register']);
 Route::post('/logout' , [AuthController::class , 'logout'])->middleware('auth:sanctum');
-Route::post('/self' , [AuthController::class , 'self'])->middleware('auth:sanctum');
+Route::post('auth/self' , [AuthController::class , 'self'])->middleware('auth:sanctum');

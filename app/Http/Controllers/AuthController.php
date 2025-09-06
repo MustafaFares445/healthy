@@ -146,6 +146,21 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/auth/self",
+     *     summary="Get authenticated user information",
+     *     description="Returns the currently authenticated user's details",
+     *     operationId="getSelf",
+     *     tags={"User"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully retrieved user information",
+     *         @OA\JsonContent(ref="#/components/schemas/UserResource")
+     *     )
+     * )
+     */
     public function self()
     {
         return UserResource::make(auth()->user());
