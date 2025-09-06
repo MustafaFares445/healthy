@@ -12,8 +12,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Homepage routes
-Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals']);
-Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
+Route::get('/home/meals/matched', [\App\Http\Controllers\MealController::class, 'matchedMeals']);
+Route::get('/home/meals/types', [\App\Http\Controllers\MealController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);
 Route::post('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
