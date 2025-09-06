@@ -71,7 +71,7 @@ class MealController extends Controller
     {
         $query = Meal::query()
             ->with(['owner', 'allergens', 'ingredients', 'media'])
-            ->orderBy('created_at', 'desc');
+            ->inRandomOrder();
 
         // Filter by availability
         if ($request->has('available')) {
@@ -535,7 +535,9 @@ class MealController extends Controller
     public function matchedMeals()
     {
         $user = Auth::user();
-        $meals = Meal::with(['media' , 'owner'])->paginate();
+        $meals = Meal::with(['media' , 'owner'])
+            ->inRandomOrder()
+            ->paginate();
 
         return MealResource::collection($meals);
     }
@@ -572,7 +574,10 @@ class MealController extends Controller
     public function dietTypesMeals(Request $request)
     {
         $dietType = $request->dietType;
-        $meals = Meal::with(['media', 'owner'])->where('diet_type', $dietType)->get();
+        $meals = Meal::with(['media', 'owner'])
+            ->where('diet_type', $dietType)
+            ->inRandomOrder()
+            ->get();
 
         return MealResource::collection($meals);
     }
