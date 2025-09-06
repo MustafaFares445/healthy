@@ -12,7 +12,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // Homepage routes
-Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals'])->middleware('auth:sanctum');
+Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals']);
 Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);
@@ -43,5 +43,5 @@ Route::middleware(AdminOnly::class)->group(function(){
 
 Route::post('/login' , [AuthController::class , 'login']);
 Route::post('/register' , [AuthController::class , 'register']);
-Route::post('/logout' , [AuthController::class , 'logout'])->middleware('auth:sanctum');
-Route::post('auth/self' , [AuthController::class , 'self'])->middleware('auth:sanctum');
+Route::post('/logout' , [AuthController::class , 'logout']);
+Route::post('auth/self' , [AuthController::class , 'self']);
