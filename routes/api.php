@@ -12,7 +12,7 @@ Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals']);
 Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);
-Route::post('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
+Route::get('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
 Route::apiResource('meals', \App\Http\Controllers\MealController::class)->only(['index' , 'show']);
 Route::get('/ingredients' , [IngredientController::class , 'index']);
 
