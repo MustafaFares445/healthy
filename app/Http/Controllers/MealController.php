@@ -73,6 +73,10 @@ class MealController extends Controller
             ->with(['owner', 'allergens', 'ingredients', 'media'])
             ->inRandomOrder();
 
+        if (!auth()->user()->hasRole('admin')) {
+            $query->where('owner_id', Auth::id());
+        }
+
         // Filter by availability
         if ($request->has('available')) {
             $query->where('is_available', $request->boolean('available'));

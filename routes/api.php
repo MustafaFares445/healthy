@@ -28,9 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user-health-info/{userId}', [UserHealthInfoController::class, 'show']);
 });
 
-Route::middleware(AdminOnly::class)->group(function(){
+Route::apiResource('reviews', \App\Http\Controllers\ReviewController::class);
 
-    Route::apiResource('reviews', \App\Http\Controllers\ReviewController::class);
+Route::middleware(AdminOnly::class)->group(function(){
 
     Route::get('orders/status-options', [\App\Http\Controllers\OrderController::class, 'statusOptions']);
     Route::get('orders/user-self', [\App\Http\Controllers\OrderController::class, 'userSelf']);
