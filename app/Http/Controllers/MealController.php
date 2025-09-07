@@ -159,7 +159,7 @@ class MealController extends Controller
 
         return response()->json([
             'message' => 'Meal created successfully',
-            'data' => new MealResource($meal->load(['owner', 'allergens', 'ingredients']))
+            'data' => new MealResource($meal->load(['owner', 'allergens', 'ingredients' , 'media']))
         ], 201);
     }
 
@@ -253,7 +253,7 @@ class MealController extends Controller
 
         return response()->json([
             'message' => 'Meal updated successfully',
-            'data' => new MealResource($meal->load(['owner', 'allergens', 'ingredients']))
+            'data' => new MealResource($meal->load(['owner', 'allergens', 'ingredients' , 'media']))
         ]);
     }
 
