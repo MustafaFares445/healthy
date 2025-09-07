@@ -100,7 +100,7 @@ trait HandlesMedia
 
                 foreach ($files as $file) {
                     /** @var Model $model */
-                    $collectionName = $type . 's';
+                    $collectionName = $type;
 
                     $model->addMedia($file)
                         ->usingFileName($name ?? $file->getFilename())
