@@ -39,7 +39,7 @@ trait HandlesMedia
      * @param string|null $collection The media collection name (default: 'default')
      * @return void
      */
-    public function handleMediaUpdate(Request $request, HasMedia $model, ?string $collection = null): void
+    public function handleMediaUpdate(Request $request, HasMedia $model, ?string $collection = 'images'): void
     {
         if ($request->hasAny(array_merge($this->fileTypes, $this->multipleFileTypes))) {
             $this->clearCollections($request, $model, $collection);
