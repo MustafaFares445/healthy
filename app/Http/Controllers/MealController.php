@@ -231,7 +231,11 @@ class MealController extends Controller
                 $meal->allergens()->sync($request->allergen_ids);
             }
 
-            $this->handleMediaUpdate($request , $meal);
+            if ($request->has('images')) {
+                $meal->media()->delete();
+                $this->handleMediaUpload($request , $meal);
+            }
+
             // Sync ingredients if provided
             if ($request->has('ingredients')) {
                 $ingredientsData = collect($request->ingredients)
