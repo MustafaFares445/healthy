@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -69,6 +70,12 @@ class User extends Authenticatable implements JWTSubject
     public function meals()
     {
         return $this->hasMany(Meal::class , 'owner_id');
+    }
+
+    public function wishlist(): BelongsToMany
+    {
+        return $this->belongsToMany(Meal::class)
+            ->using(WishList::class);
     }
 
     /**

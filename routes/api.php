@@ -3,9 +3,15 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\UserHealthInfoController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\AdminOnly;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/wishlist' , [WishListController::class , 'index'])->middleware('auth:sanctum');
+Route::post('/wishlist' , [WishListController::class , 'store'])->middleware('auth:sanctum');
 
 // Homepage routes
 Route::get('/home/meals/matched', [HomePageController::class, 'matchedMeals']);
@@ -15,6 +21,12 @@ Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'di
 Route::get('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
 Route::apiResource('meals', \App\Http\Controllers\MealController::class)->only(['index' , 'show']);
 Route::get('/ingredients' , [IngredientController::class , 'index']);
+
+// User Health Info routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/user-health-info/create-or-update', [UserHealthInfoController::class, 'createOrUpdate']);
+    Route::get('/user-health-info/{userId}', [UserHealthInfoController::class, 'show']);
+});
 
 Route::middleware(AdminOnly::class)->group(function(){
 

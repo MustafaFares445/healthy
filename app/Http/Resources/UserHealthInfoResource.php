@@ -16,42 +16,54 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         description="The unique identifier of the health info record"
  *     ),
  *     @OA\Property(
- *         property="userId",
+ *         property="user_id",
  *         type="integer",
  *         description="The ID of the user associated with this health info"
- *     ),
- *     @OA\Property(
- *         property="height",
- *         type="number",
- *         format="float",
- *         description="The height of the user"
  *     ),
  *     @OA\Property(
  *         property="weight",
  *         type="number",
  *         format="float",
- *         description="The weight of the user"
+ *         description="The weight of the user in kilograms"
  *     ),
  *     @OA\Property(
- *         property="bloodPressure",
+ *         property="height",
+ *         type="number",
+ *         format="float",
+ *         description="The height of the user in centimeters"
+ *     ),
+ *     @OA\Property(
+ *         property="activity_level",
  *         type="string",
- *         description="The blood pressure of the user"
+ *         enum={"sedentary", "active", "very_active"},
+ *         description="The activity level of the user"
  *     ),
  *     @OA\Property(
- *         property="heartRate",
- *         type="integer",
- *         description="The heart rate of the user"
- *     ),
- *     @OA\Property(
- *         property="createdAt",
+ *         property="dietary_restrictions",
  *         type="string",
- *         format="date",
+ *         description="Dietary restrictions of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="goal",
+ *         type="string",
+ *         enum={"weight_loss", "maintenance", "muscle_gain"},
+ *         description="The fitness goal of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="health_notes",
+ *         type="string",
+ *         description="Additional health notes"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
  *         description="The date when the health info was created"
  *     ),
  *     @OA\Property(
- *         property="updatedAt",
+ *         property="updated_at",
  *         type="string",
- *         format="date",
+ *         format="date-time",
  *         description="The date when the health info was last updated"
  *     )
  * )
@@ -63,12 +75,14 @@ class UserHealthInfoResource extends JsonResource
         return [
             'id' => $this->id,
             'userId' => $this->user_id,
-            'height' => $this->height,
             'weight' => $this->weight,
-            'bloodPressure' => $this->blood_pressure,
-            'heartRate' => $this->heart_rate,
-            'createdAt' => $this->created_at?->toDateString(),
-            'updatedAt' => $this->updated_at?->toDateString(),
+            'height' => $this->height,
+            'activityLevel' => $this->activity_level,
+            'dietaryRestrictions' => $this->dietary_restrictions,
+            'goal' => $this->goal,
+            'healthNotes' => $this->health_notes,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }

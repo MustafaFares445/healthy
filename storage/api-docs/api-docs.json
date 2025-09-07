@@ -1832,10 +1832,292 @@
                     }
                 ]
             }
+        },
+        "/api/user-health-info/create-or-update": {
+            "post": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Create or update user health information",
+                "description": "Create or update user health information.",
+                "operationId": "ea5c997738a6e2609167bb51f3aab4e1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "userId"
+                                ],
+                                "properties": {
+                                    "userId": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "weight": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 70.5
+                                    },
+                                    "height": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 175.5
+                                    },
+                                    "activityLevel": {
+                                        "type": "string",
+                                        "enum": [
+                                            "sedentary",
+                                            "active",
+                                            "very_active"
+                                        ],
+                                        "example": "active"
+                                    },
+                                    "dietaryRestrictions": {
+                                        "type": "string",
+                                        "example": "vegetarian"
+                                    },
+                                    "goal": {
+                                        "type": "string",
+                                        "enum": [
+                                            "weight_loss",
+                                            "maintenance",
+                                            "muscle_gain"
+                                        ],
+                                        "example": "weight_loss"
+                                    },
+                                    "healthNotes": {
+                                        "type": "string",
+                                        "example": "No known allergies"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User health information updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User health information updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserHealthInfoResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User health information created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserHealthInfoResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user-health-info/{userId}": {
+            "get": {
+                "tags": [
+                    "User Health Info"
+                ],
+                "summary": "Get user health information",
+                "description": "Get user health information by user ID.",
+                "operationId": "1a7df6ea0caca83073179212df89996d",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User health information retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserHealthInfoResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User health information not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/wishlist": {
+            "get": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Get user's wishlist products with filtered media",
+                "operationId": "7de9c05c67c97110c68860d9c0b814f9",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Add meals to user's wishlist",
+                "description": "Sync user's wishlist with provided meal IDs",
+                "operationId": "wishlist.store",
+                "requestBody": {
+                    "description": "meal  IDs to add to wishlist",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mealId"
+                                ],
+                                "properties": {
+                                    "mealId": {
+                                        "description": "Array of product IDs to add to wishlist",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "format": "int64",
+                                            "example": 1
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Wishlist updated successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated - User not logged in"
+                    },
+                    "422": {
+                        "description": "Validation error - Invalid product IDs"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "CreateOrUpdateUserHealthInfoRequest": {
+                "required": [
+                    "user_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "description": "The ID of the user",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "weight": {
+                        "description": "The weight of the user in kilograms",
+                        "type": "number",
+                        "format": "float",
+                        "example": 70.5
+                    },
+                    "height": {
+                        "description": "The height of the user in centimeters",
+                        "type": "number",
+                        "format": "float",
+                        "example": 175.5
+                    },
+                    "activity_level": {
+                        "description": "The activity level of the user",
+                        "type": "string",
+                        "enum": [
+                            "sedentary",
+                            "active",
+                            "very_active"
+                        ],
+                        "example": "active"
+                    },
+                    "dietary_restrictions": {
+                        "description": "Dietary restrictions of the user",
+                        "type": "string",
+                        "example": "vegetarian"
+                    },
+                    "goal": {
+                        "description": "The fitness goal of the user",
+                        "type": "string",
+                        "enum": [
+                            "weight_loss",
+                            "maintenance",
+                            "muscle_gain"
+                        ],
+                        "example": "weight_loss"
+                    },
+                    "health_notes": {
+                        "description": "Additional health notes",
+                        "type": "string",
+                        "example": "No known allergies"
+                    }
+                },
+                "type": "object"
+            },
             "StoreAllergenRequest": {
                 "title": "StoreAllergenRequest",
                 "description": "Request schema for storing a new allergen",
@@ -2972,37 +3254,55 @@
                         "description": "The unique identifier of the health info record",
                         "type": "integer"
                     },
-                    "userId": {
+                    "user_id": {
                         "description": "The ID of the user associated with this health info",
                         "type": "integer"
                     },
-                    "height": {
-                        "description": "The height of the user",
-                        "type": "number",
-                        "format": "float"
-                    },
                     "weight": {
-                        "description": "The weight of the user",
+                        "description": "The weight of the user in kilograms",
                         "type": "number",
                         "format": "float"
                     },
-                    "bloodPressure": {
-                        "description": "The blood pressure of the user",
+                    "height": {
+                        "description": "The height of the user in centimeters",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "activity_level": {
+                        "description": "The activity level of the user",
+                        "type": "string",
+                        "enum": [
+                            "sedentary",
+                            "active",
+                            "very_active"
+                        ]
+                    },
+                    "dietary_restrictions": {
+                        "description": "Dietary restrictions of the user",
                         "type": "string"
                     },
-                    "heartRate": {
-                        "description": "The heart rate of the user",
-                        "type": "integer"
+                    "goal": {
+                        "description": "The fitness goal of the user",
+                        "type": "string",
+                        "enum": [
+                            "weight_loss",
+                            "maintenance",
+                            "muscle_gain"
+                        ]
                     },
-                    "createdAt": {
+                    "health_notes": {
+                        "description": "Additional health notes",
+                        "type": "string"
+                    },
+                    "created_at": {
                         "description": "The date when the health info was created",
                         "type": "string",
-                        "format": "date"
+                        "format": "date-time"
                     },
-                    "updatedAt": {
+                    "updated_at": {
                         "description": "The date when the health info was last updated",
                         "type": "string",
-                        "format": "date"
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -3074,6 +3374,14 @@
         {
             "name": "Users",
             "description": "Users"
+        },
+        {
+            "name": "User Health Info",
+            "description": "User Health Info"
+        },
+        {
+            "name": "Wishlist",
+            "description": "Wishlist"
         }
     ]
 }
