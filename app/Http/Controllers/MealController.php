@@ -533,9 +533,9 @@ class MealController extends Controller
     public function popular(Request $request)
     {
         // Get AI bias-corrected top meals
-        $aiTopMeals = Http::get(config('http://145.223.81.14:8002'. '/top-bias', [
+        $aiTopMeals = Http::get('http://145.223.81.14:8002'. '/top-bias', [
             'k' => 10,
-        ]));
+        ]);
 
         // Extract meal IDs from AI response
         $topMealIds = collect($aiTopMeals)->pluck('id')->take(10)->toArray();
