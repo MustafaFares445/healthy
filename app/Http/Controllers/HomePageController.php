@@ -6,6 +6,7 @@ use App\Http\Resources\MealResource;
 use App\Models\Meal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class HomePageController extends Controller
 {
@@ -42,14 +43,23 @@ class HomePageController extends Controller
      *     )
      * )
      */
-    public function matchedMeals()
+    public function matchedMeals(Request $request)
     {
-         $user = Auth::user();
-         $meals = Meal::with(['media' , 'owner'])
-             ->inRandomOrder()
-             ->paginate();
+        $aiRecommendations = Http::post(config('ai.recommendation_url') . '/recommend', [
+            'user_id' => auth()->id(),
+        ]);
 
-         return MealResource::collection($meals);
+        // Extract meal IDs from AI response
+        $mealIds = collect($aiRecommendations)->pluck('id')->toArray();
+
+        // Get meals from Laravel model in the order of AI recommendations
+        $meals = Meal::whereIn('id', $mealIds)
+            ->get()
+            ->sortBy(function ($meal) use ($mealIds) {
+                return array_search($meal->id, $mealIds);
+            });
+
+        return MealResource::collection($meals);
     }
 
     /**

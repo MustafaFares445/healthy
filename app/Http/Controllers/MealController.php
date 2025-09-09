@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 
 class MealController extends Controller
@@ -507,47 +508,45 @@ class MealController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/meals/recommended",
-     *     summary="Get a list of meals",
-     *     tags={"Meals"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/MealResource")
-     *         )
-     *     )
-     * )
-     */
     public function recommendedMeals(Meal $meal)
     {
-        return MealResource::collection(
-            Meal::inRandomOrder()->limit(5)->get()
-        );
+        // Get AI similar meal recommendations
+        $aiSimilarMeals = Http::get(config('ai.recommendation_url') . '/similar', [
+            'meal_id' => $meal->id,
+            'k' => 10
+        ]);
+        // Extract meal IDs from AI response
+        $similarMealIds = collect($aiSimilarMeals)->pluck('id')->toArray();
+
+        // Get similar meals from database, excluding the original meal
+        $similarMeals = Meal::whereIn('id', $similarMealIds)
+            ->where('id', '!=', $meal->id)
+            ->get()
+            ->sortBy(function ($similarMeal) use ($similarMealIds) {
+                return array_search($similarMeal->id, $similarMealIds);
+            });
+
+        return MealResource::collection($similarMeals);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/api/meals/popular",
-     *     summary="Get a list of meals",
-     *     tags={"Meals"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation",
-     *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/MealResource")
-     *         )
-     *     )
-     * )
-     */
-    public function popular(Meal $meal)
+
+    public function popular(Request $request)
     {
-        return MealResource::collection(
-            Meal::inRandomOrder()->paginate()
-        );
+        // Get AI bias-corrected top meals
+        $aiTopMeals = Http::get(config('ai.recommendation_url') . '/top-bias', [
+            'k' => 10,
+        ]);
+
+        // Extract meal IDs from AI response
+        $topMealIds = collect($aiTopMeals)->pluck('id')->take(10)->toArray();
+
+        // Get top meals from database maintaining AI ranking order
+        $topMeals = Meal::whereIn('id', $topMealIds)
+            ->get()
+            ->sortBy(function ($topMeal) use ($topMealIds) {
+                return array_search($topMeal->id, $topMealIds);
+            });
+
+        return MealResource::collection($topMeals);
     }
 }
