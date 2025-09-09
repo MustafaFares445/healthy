@@ -45,7 +45,7 @@ class HomePageController extends Controller
      */
     public function matchedMeals(Request $request)
     {
-        $aiRecommendations = Http::post(config('ai.recommendation_url') . '/recommend', [
+        $aiRecommendations = Http::post('http://145.223.81.14:8002' . '/recommend', [
             'user_id' => auth()->id(),
         ]);
 

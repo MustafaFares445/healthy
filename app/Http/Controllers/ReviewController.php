@@ -51,7 +51,7 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
-        $review = Review::query()->create([
+        $review = Review::create([
             'user_id' => $request->input('userId'),
             'meal_id' => $request->input('mealId'),
             'rating' => $request->input('rating'),

@@ -13,6 +13,13 @@ class Review extends Model
         'comment',
     ];
 
+    protected $casts = [
+        'user_id' => 'integer',
+        'meal_id' => 'integer',
+        'rating' => 'integer',
+        'comment' => 'string',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
