@@ -1112,6 +1112,54 @@
                 }
             }
         },
+        "/api/meals/recommended": {
+            "get": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Get a list of meals",
+                "operationId": "dba665f90210d1799a9786edbb2c2ae7",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MealResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/meals/popular": {
+            "get": {
+                "tags": [
+                    "Meals"
+                ],
+                "summary": "Get a list of meals",
+                "operationId": "424d7686e88396110e0c3496392ad021",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MealResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/orders": {
             "get": {
                 "tags": [

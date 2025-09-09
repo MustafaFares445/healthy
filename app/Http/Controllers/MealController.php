@@ -506,4 +506,48 @@ class MealController extends Controller
             'data' => Meal::pluck('diet_type')->unique()->values()->toArray(),
         ]);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/api/meals/recommended",
+     *     summary="Get a list of meals",
+     *     tags={"Meals"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/MealResource")
+     *         )
+     *     )
+     * )
+     */
+    public function recommendedMeals(Meal $meal)
+    {
+        return MealResource::collection(
+            Meal::inRandomOrder()->limit(5)->get()
+        );
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/meals/popular",
+     *     summary="Get a list of meals",
+     *     tags={"Meals"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/MealResource")
+     *         )
+     *     )
+     * )
+     */
+    public function popular(Meal $meal)
+    {
+        return MealResource::collection(
+            Meal::inRandomOrder()->paginate()
+        );
+    }
 }

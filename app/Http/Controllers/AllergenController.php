@@ -59,6 +59,11 @@ class AllergenController extends Controller
         return AllergenResource::collection($allergens);
     }
 
+    public function show(Allergen $allergen): AllergenResource
+    {
+        return new AllergenResource($allergen);
+    }
+
     /**
      * @OA\Post(
      *     path="/api/allergens",

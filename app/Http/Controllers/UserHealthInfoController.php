@@ -70,12 +70,13 @@ class UserHealthInfoController extends Controller
         // Prepare data for create/update
         $data = $request->only([
             'weight',
-            'height', 
+            'height',
             'activityLevel',
             'dietaryRestrictions',
             'goal',
             'healthNotes'
         ]);
+
         $data['user_id'] = $request->userId;
 
         // Use updateOrCreate to handle both create and update
@@ -122,7 +123,7 @@ class UserHealthInfoController extends Controller
     public function show($userId)
     {
         $userHealthInfo = UserHealthInfo::where('user_id', $userId)->first();
-        
+
         if (!$userHealthInfo) {
             return response()->json([
                 'message' => 'User health information not found'

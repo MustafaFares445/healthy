@@ -19,14 +19,13 @@ Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);
 Route::get('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
+Route::get('meals/recommend', [\App\Http\Controllers\MealController::class, 'recommendedMeals']);
+Route::get('meals/popular', [\App\Http\Controllers\MealController::class, 'popular']);
 Route::apiResource('meals', \App\Http\Controllers\MealController::class)->only(['index' , 'show']);
-Route::get('/ingredients' , [IngredientController::class , 'index']);
 
 // User Health Info routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/user-health-info/create-or-update', [UserHealthInfoController::class, 'createOrUpdate']);
-    Route::get('/user-health-info/{userId}', [UserHealthInfoController::class, 'show']);
-});
+Route::post('/user-health-info/create-or-update', [UserHealthInfoController::class, 'createOrUpdate']);
+Route::get('/user-health-info/{userId}', [UserHealthInfoController::class, 'show']);
 
 Route::apiResource('reviews', \App\Http\Controllers\ReviewController::class);
 
@@ -40,7 +39,7 @@ Route::middleware(AdminOnly::class)->group(function(){
     Route::apiResource('meals', \App\Http\Controllers\MealController::class)->except(['index' , 'show']);
 
     Route::get('ingredients/stats', [\App\Http\Controllers\IngredientController::class, 'stats']);
-    Route::apiResource('ingredients', \App\Http\Controllers\IngredientController::class)->except(['index' , 'show']);
+    Route::apiResource('ingredients', \App\Http\Controllers\IngredientController::class);
 
     Route::get('allergens/stats', [\App\Http\Controllers\AllergenController::class, 'stats']);
     Route::apiResource('allergens', \App\Http\Controllers\AllergenController::class);

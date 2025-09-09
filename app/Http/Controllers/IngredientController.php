@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\IngredientResource;
 use App\Http\Requests\StoreIngredientRequest;
 use App\Http\Requests\UpdateIngredientRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-
 
 class IngredientController extends Controller
 {
@@ -78,6 +76,11 @@ class IngredientController extends Controller
         $ingredients = $query->paginate($request->input('perPage', 15));
 
         return IngredientResource::collection($ingredients);
+    }
+
+    public function show(Ingredient $ingredient)
+    {
+        return new IngredientResource($ingredient);
     }
 
     /**
