@@ -518,7 +518,8 @@ class MealController extends Controller
         $similarMealIds = $aiSimilarMeals->json('similar');
 
         // Get similar meals from database, excluding the original meal
-        $similarMeals = Meal::whereIn('id', $similarMealIds)
+        $similarMeals = Meal::query()
+            ->whereIn('id', $similarMealIds)
             ->where('id', '!=', $meal->id)
             ->get()
             ->sortBy(function ($similarMeal) use ($similarMealIds) {
@@ -537,10 +538,11 @@ class MealController extends Controller
         ]);
 
         // Extract meal IDs from AI response
-        $topMealIds = collect($aiTopMeals)->pluck('id')->take(10)->toArray();
+        $topMealIds = $aiTopMeals->json('meals');
 
         // Get top meals from database maintaining AI ranking order
-        $topMeals = Meal::whereIn('id', $topMealIds)
+        $topMeals = Meal::query()
+            ->whereIn('id', $topMealIds)
             ->get()
             ->sortBy(function ($topMeal) use ($topMealIds) {
                 return array_search($topMeal->id, $topMealIds);

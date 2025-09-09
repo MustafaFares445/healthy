@@ -53,7 +53,7 @@ class HomePageController extends Controller
         ]);
 
         // Extract meal IDs from AI response
-        $mealIds = collect($aiRecommendations)->pluck('id')->toArray();
+        $mealIds = collect($aiRecommendations->json())->pluck('id')->toArray();
 
         // Get meals from Laravel model in the order of AI recommendations
         $meals = Meal::whereIn('id', $mealIds)
