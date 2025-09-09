@@ -511,12 +511,11 @@ class MealController extends Controller
     public function recommendedMeals(Meal $meal)
     {
         // Get AI similar meal recommendations
-        $aiSimilarMeals = Http::get('http://145.223.81.14:8002' . '/similar', [
-            'meal_id' => $meal->id,
+        $aiSimilarMeals = Http::get('http://145.223.81.14:8002' . '/similar/' . $meal->id, [
             'k' => 10
         ]);
         // Extract meal IDs from AI response
-        $similarMealIds = collect($aiSimilarMeals)->pluck('id')->toArray();
+        $similarMealIds = $aiSimilarMeals->json('similar');
 
         // Get similar meals from database, excluding the original meal
         $similarMeals = Meal::whereIn('id', $similarMealIds)

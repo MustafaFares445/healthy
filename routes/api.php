@@ -19,7 +19,7 @@ Route::get('/home/meals/types', [HomePageController::class, 'dietTypesMeals']);
 
 Route::get('meals/diet-types', [\App\Http\Controllers\MealController::class, 'dietTypes']);
 Route::get('meals/search', [\App\Http\Controllers\MealController::class, 'search']);
-Route::get('meals/recommend', [\App\Http\Controllers\MealController::class, 'recommendedMeals']);
+Route::get('meals/recommend/{meal}', [\App\Http\Controllers\MealController::class, 'recommendedMeals']);
 Route::get('meals/popular', [\App\Http\Controllers\MealController::class, 'popular']);
 Route::apiResource('meals', \App\Http\Controllers\MealController::class)->only(['index' , 'show']);
 
