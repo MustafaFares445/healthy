@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\MealResource;
 use App\Models\Meal;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -42,11 +43,13 @@ class HomePageController extends Controller
      *         description="Unauthenticated"
      *     )
      * )
+     * @throws ConnectionException
      */
     public function matchedMeals(Request $request)
     {
         $aiRecommendations = Http::post('http://145.223.81.14:8002' . '/recommend', [
             'user_id' => auth()->id(),
+            'k' => 10,
         ]);
 
         // Extract meal IDs from AI response
