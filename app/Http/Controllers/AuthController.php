@@ -166,6 +166,6 @@ class AuthController extends Controller
      */
     public function self()
     {
-        return UserResource::make(auth()->user());
+        return UserResource::make(auth()->user()->load('healthInfo'));
     }
 }

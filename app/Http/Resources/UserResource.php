@@ -36,7 +36,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *         property="createdAt",
  *         type="string",
  *         format="date",
- *     )
+ *     ),
+ *     @OA\Property(
+ *          property="healthInfo",
+ *          ref="#/components/schemas/UserHealthInfoResource",
+ *          description="The owner of the meal"
+ *      ),
  * )
  */
 class UserResource extends JsonResource
@@ -55,7 +60,8 @@ class UserResource extends JsonResource
             'city' => $this->city,
             'phone' => $this->phone,
             'createdAt' => $this->created_at?->toDateString(),
-            'roles' => $this->getRoleNames()
+            'roles' => $this->getRoleNames(),
+            'healthInfo' => UserHealthInfoResource::make($this->healthInfo)
         ];
     }
 }

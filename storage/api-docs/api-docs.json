@@ -3377,6 +3377,9 @@
                     "createdAt": {
                         "type": "string",
                         "format": "date"
+                    },
+                    "healthInfo": {
+                        "$ref": "#/components/schemas/UserHealthInfoResource"
                     }
                 },
                 "type": "object"
