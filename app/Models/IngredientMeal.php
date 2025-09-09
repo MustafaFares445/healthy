@@ -11,6 +11,14 @@ class Ingredient extends Model
         'fiber', 'carbohydrates', 'sodium'
     ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($model) {
+            // Delete associated media files
+            $model->meals()->detach();
+        });
+    }
+
     public $timestamps = false;
 
     public function meals()

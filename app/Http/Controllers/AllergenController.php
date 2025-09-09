@@ -154,13 +154,6 @@ class AllergenController extends Controller
      */
     public function destroy(Allergen $allergen): JsonResponse
     {
-        // Check if allergen is used in any meals
-        if ($allergen->meals()->exists()) {
-            return response()->json([
-                'message' => 'Cannot delete allergen as it is associated with one or more meals'
-            ], 422);
-        }
-
         $allergen->delete();
 
         return response()->json([
